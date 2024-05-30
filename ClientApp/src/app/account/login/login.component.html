@@ -1,0 +1,48 @@
+<div class="body-login">
+    <div class="top">
+        <div style="font-size: 1.75rem; color: #464e5f; font-family: 'Poppins';">Sign In</div>
+        <div style="font-size: 13px; color: #6C757D;">Enter your username and password</div>
+    </div>
+
+    <main class="form-signin">
+        <form [formGroup]="loginForm" (ngSubmit)="login()" autocomplete="off" >
+            <div class="form-floating mb-3" style="width: 100%;">
+                <input formControlName="userName" type="text" placeholder="Username (your email address)" class="form-control" 
+                [class.is-invalid]="submitted && loginForm.get('userName')?.errors">
+                <label for="userName" class="label-text">Username (your email address)</label>
+                <span class="text-danger" *ngIf="submitted && loginForm.get('userName')?.hasError('required')">
+                   User name is required
+                </span>
+            </div>
+            <div class="form-floating mb-3">
+                <input formControlName="password" type="password" placeholder="Password" class="form-control"
+                [class.is-invalid]="submitted && loginForm.get('password')?.errors">
+                <label for="password"  class="label-text">Password</label>
+                <span class="text-danger" *ngIf="submitted && loginForm.get('password')?.hasError('required')">
+                    Password is required
+                </span>
+            </div>
+
+            <div class="form-floating" *ngIf="errorMessages.length > 0">
+                <app-validation-messages [errorMessages]="errorMessages"></app-validation-messages>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+                <mat-checkbox class="example-margin">Remember me?</mat-checkbox>
+                <button mat-flat-button color="primary">Sign In</button>
+            </div>
+        </form>
+        <div class="mt-4 text-center">
+            <a class="btn btn-link">
+                <h4>Forgot password?</h4>
+            </a> 
+
+        </div>
+        
+        
+
+    </main>
+    
+   
+    
+</div>
