@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { AccountService } from '../account/account.service';
 
 @Component({
   selector: 'app-navbar',
@@ -7,4 +8,16 @@ import { Component } from '@angular/core';
 })
 export class NavbarComponent {
 
+  constructor (public accountService: AccountService) {
+    
+  }
+
+
+  // ngOnInit(): void {
+  //   throw new Error('Method not implemented.');
+  // }
+
+  logout() {
+    this.accountService.logout();
+  }
 }

@@ -7,31 +7,42 @@
     </div>
     
     <div style="width: 203px; height: 40px; background-color: #FBFBFB; border-radius: 6px; border: none;" fxLayout="row" fxLayoutAlign="space-around center">
-        <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <mask id="mask0_2582_1767" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="25">
-            <path d="M17 12.5H18.5C19.3284 12.5 20 13.1716 20 14C20 14.8284 19.3284 15.5 18.5 15.5H5.5C4.67157 15.5 4 14.8284 4 14C4 13.1716 4.67157 12.5 5.5 12.5H7L7.55827 7.47553C7.80975 5.21226 9.72279 3.5 12 3.5C14.2772 3.5 16.1903 5.21226 16.4417 7.47553L17 12.5Z" fill="black"/>
-            <rect opacity="0.3" x="10" y="16.5" width="4" height="4" rx="2" fill="black"/>
-            </mask>
-            <g mask="url(#mask0_2582_1767)">
-            <rect y="0.5" width="24" height="24" fill="#4A7DFF"/>
-            </g>
-            </svg>
-            <div  style="font-size: 12px; font-weight: 700;">
-                Hi, Username
+      <div *ngIf="(accountService.user$ | async) as user">
+        <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg" >
+          <mask id="mask0_2582_1767" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="25">
+          <path d="M17 12.5H18.5C19.3284 12.5 20 13.1716 20 14C20 14.8284 19.3284 15.5 18.5 15.5H5.5C4.67157 15.5 4 14.8284 4 14C4 13.1716 4.67157 12.5 5.5 12.5H7L7.55827 7.47553C7.80975 5.21226 9.72279 3.5 12 3.5C14.2772 3.5 16.1903 5.21226 16.4417 7.47553L17 12.5Z" fill="black"/>
+          <rect opacity="0.3" x="10" y="16.5" width="4" height="4" rx="2" fill="black"/>
+          </mask>
+          <g mask="url(#mask0_2582_1767)">
+          <rect y="0.5" width="24" height="24" fill="#4A7DFF"/>
+          </g>
+          </svg>
+      </div>
+        
+            <div  style="font-size: 12px; font-weight: 700;" *ngIf="(accountService.user$ | async) as user" >
+              <a class="tex-white" style="text-decoration: none; cursor: pointer;"> Hi 
+              <span class="h3 text-warning">{{user.firstName | titlecase}}</span></a>
+            </div>
+            <div  style="font-size: 12px; font-weight: 700;" *ngIf="(accountService.user$ | async) === null">
+              Hi Stranger!
             </div>
            
             <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg" [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu" style="cursor: pointer;">
                 <path d="M17.2929 8.79289C17.6834 8.40237 18.3166 8.40237 18.7071 8.79289C19.0976 9.18342 19.0976 9.81658 18.7071 10.2071L12.7071 16.2071C12.3285 16.5857 11.7189 16.5989 11.3243 16.2372L5.32428 10.7372C4.91716 10.364 4.88965 9.73139 5.26285 9.32427C5.63604 8.91716 6.26861 8.88965 6.67572 9.26284L11.9699 14.1159L17.2929 8.79289Z" fill="#80808F"/>
                 </svg>  
                   <mat-menu #menu="matMenu">
-                    <button mat-menu-item routerLink="/account/login">
+                    <button mat-menu-item routerLink="/account/login" *ngIf="(accountService.user$ | async) === null">
                         <mat-icon>lock_open</mat-icon>
                       <span routerLinkActive="active">Login</span>
                     </button>
-                    <button mat-menu-item routerLink="/account/register" routerLinkActive="active">
+                    <button mat-menu-item routerLink="/account/register" routerLinkActive="active" *ngIf="(accountService.user$ | async) === null">
                         <mat-icon>note_add</mat-icon>
                         <span routerLinkActive="active">Register</span>
                     </button>
+                    <button mat-menu-item routerLink="/account/login"(click)="logout()" *ngIf="(accountService.user$ | async) as user">
+                      <mat-icon>lock_open</mat-icon>
+                    <span routerLinkActive="active">LogOut</span>
+                  </button>
                   </mat-menu>                     
     </div>
   </mat-toolbar>
