@@ -1,0 +1,140 @@
+<h2 class="racelabel" mat-dialog-title>Race Program Form</h2>
+<mat-dialog-content class="mat-typography">
+
+
+  <div class="form-container">
+    <form [formGroup]="managerForm">
+      <!-- Team Information -->
+      <div class="form-section">
+        <div class="form-field">
+          <label class="label-info" for="teamName">Team name</label>
+          <input class="input-lable" formControlName="teamName" type="text" placeholder="Enter Team Name" />
+          <small class="text-danger" *ngIf="managerForm.get('teamName')?.touched && managerForm.get('teamName')?.invalid">
+            Team name is required.
+          </small>
+        </div>
+  
+        <div class="form-field">
+          <label class="label-info" for="categoryId">Sport category</label>
+          <select class="input-select" formControlName="categoryId" id="categoryId">
+            <option *ngFor="let item of category" [ngValue]="item.id">{{ item.categoryName }}</option>
+          </select>          
+        </div>
+      </div>
+  
+      <!-- Manager Information -->
+      <h3 class="information-label">Manager Information</h3>
+      <div class="form-section">
+        <div class="form-field">
+          <label class="label-info" for="name">Manager name</label>
+          <input class="input-lable" formControlName="name" type="text" id="name" placeholder="Enter name" />
+          <small class="text-danger" *ngIf="managerForm.get('name')?.touched && managerForm.get('name')?.invalid">
+            Manager name is required.
+          </small>
+        </div>
+  
+        <div class="form-field">
+          <label class="label-info" for="age">Age</label>
+          <input class="input-lable" formControlName="age"  type="text" id="age" placeholder="Enter Age" />
+          <small class="text-danger" *ngIf="managerForm.get('age')?.touched && managerForm.get('age')?.hasError('required')">
+            Age is required.
+          </small>
+        </div>
+  
+        <div class="form-field">
+          <label class="label-info" for="email">Email</label>
+          <input class="input-lable" formControlName="email" type="email" id="email" placeholder="Enter email" />
+          <small class="text-danger" *ngIf="managerForm.get('email')?.touched && managerForm.get('email')?.hasError('required')">
+            Email is required.
+          </small>
+          <small class="text-danger" *ngIf="managerForm.get('email')?.touched && managerForm.get('email')?.hasError('email')">
+            Please enter a valid email.
+          </small>
+        </div>
+  
+        <div class="form-field">
+          <label class="label-info" for="phoneNumber">Phone number</label>
+          <input class="input-lable" formControlName="phoneNumber" type="tel" id="phoneNumber" placeholder="Enter Phone number" />
+          <small class="text-danger" *ngIf="managerForm.get('phoneNumber')?.touched && managerForm.get('phoneNumber')?.invalid">
+            Phone number is required.
+          </small>
+        </div>
+      </div>
+  
+      <!-- Player Information -->
+      <h3 class="information-label">Player Information</h3>
+      <div [formGroup]="playerForm" class="form-section">
+        <div class="form-field">
+          <label class="label-info" for="name">Player name</label>
+          <input class="input-lable" formControlName="name" type="text" id="name" placeholder="Enter name" />
+          <small class="text-danger" *ngIf="playerForm.get('name')?.touched && playerForm.get('name')?.invalid">
+            Player name is required.
+          </small>
+        </div>
+  
+        <div class="form-field">
+          <label class="label-info" for="age">Age</label>
+          <input class="input-lable" formControlName="age" type="number" id="age" placeholder="Enter Age" />
+          <small class="text-danger" *ngIf="playerForm.get('age')?.touched && playerForm.get('age')?.hasError('required')">
+            Player age is required.
+          </small>
+        </div>
+  
+        <div class="form-field">
+          <label class="label-info" for="phoneNumber">Phone number</label>
+          <input class="input-lable" formControlName="phoneNumber" type="text" id="phoneNumber" placeholder="Enter Phone number" />
+          <small class="text-danger" *ngIf="playerForm.get('phoneNumber')?.touched && playerForm.get('phoneNumber')?.invalid">
+            Phone number is required.
+          </small>
+        </div>
+
+        
+      </div>
+
+      <button type="button" class="add-button" (click)="addPlayer()">Add Player <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0.666748 9.02236L14.0001 7.77236L0.666748 6.52236V0.91677C0.666748 0.85782 0.679257 0.799542 0.703447 0.745784C0.79788 0.535934 1.04455 0.44237 1.2544 0.536802L16.489 7.39239C16.5819 7.43418 16.6562 7.50852 16.698 7.60137C16.7925 7.81122 16.6989 8.05789 16.489 8.15233L1.2544 15.0079C1.20064 15.0321 1.14236 15.0446 1.08341 15.0446C0.853296 15.0446 0.666748 14.8581 0.666748 14.6279V9.02236Z" fill="white"/>
+        </svg>
+        </button>
+  
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+        <ng-container matColumnDef="name">
+          <th class="th-header" mat-header-cell *matHeaderCellDef> Name </th>
+          <td class="td-header" mat-cell *matCellDef="let player"> {{ player.name }} </td>
+        </ng-container>
+      
+        <ng-container matColumnDef="age">
+          <th  class="th-header" mat-header-cell *matHeaderCellDef> Age </th>
+          <td  class="td-header" mat-cell *matCellDef="let player"> {{ player.age }} </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="phoneNumber">
+          <th class="th-header" mat-header-cell *matHeaderCellDef> Phone Number </th>
+          <td class="td-header" mat-cell *matCellDef="let player"> {{ player.phoneNumber }} </td>
+        </ng-container>
+      
+        <ng-container matColumnDef="actions">
+          <th class="th-header" mat-header-cell *matHeaderCellDef> Actions </th>
+          <td class="td-header" mat-cell *matCellDef="let player; let i = index">
+            <button mat-button color="warn" (click)="removePlayer(i)"><svg width="14" height="17" viewBox="0 0 14 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 15V4.5H13V15C13 15.8438 12.3125 16.5 11.5 16.5H2.5C1.65625 16.5 1 15.8438 1 15ZM9.5 7V14C9.5 14.2812 9.71875 14.5 10 14.5C10.25 14.5 10.5 14.2812 10.5 14V7C10.5 6.75 10.25 6.5 10 6.5C9.71875 6.5 9.5 6.75 9.5 7ZM6.5 7V14C6.5 14.2812 6.71875 14.5 7 14.5C7.25 14.5 7.5 14.2812 7.5 14V7C7.5 6.75 7.25 6.5 7 6.5C6.71875 6.5 6.5 6.75 6.5 7ZM3.5 7V14C3.5 14.2812 3.71875 14.5 4 14.5C4.25 14.5 4.5 14.2812 4.5 14V7C4.5 6.75 4.25 6.5 4 6.5C3.71875 6.5 3.5 6.75 3.5 7ZM13.5 1.5C13.75 1.5 14 1.75 14 2V3C14 3.28125 13.75 3.5 13.5 3.5H0.5C0.21875 3.5 0 3.28125 0 3V2C0 1.75 0.21875 1.5 0.5 1.5H4.25L4.53125 0.9375C4.65625 0.6875 4.90625 0.5 5.1875 0.5H8.78125C9.0625 0.5 9.3125 0.6875 9.4375 0.9375L9.75 1.5H13.5Z" fill="#F14624"/>
+              </svg>
+              </button>
+          </td>
+        </ng-container>
+      
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+      
+    
+      <mat-dialog-actions align="end">
+        <!-- <button mat-button mat-dialog-close>Cancel</button> -->
+        <button type="button" class="add-button" (click)="submitManager()">Submit <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0.666748 9.02236L14.0001 7.77236L0.666748 6.52236V0.91677C0.666748 0.85782 0.679257 0.799542 0.703447 0.745784C0.79788 0.535934 1.04455 0.44237 1.2544 0.536802L16.489 7.39239C16.5819 7.43418 16.6562 7.50852 16.698 7.60137C16.7925 7.81122 16.6989 8.05789 16.489 8.15233L1.2544 15.0079C1.20064 15.0321 1.14236 15.0446 1.08341 15.0446C0.853296 15.0446 0.666748 14.8581 0.666748 14.6279V9.02236Z" fill="white"/>
+          </svg></button>
+      </mat-dialog-actions>
+      
+    </form>
+  </div>
+  

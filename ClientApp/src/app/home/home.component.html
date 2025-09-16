@@ -1,1 +1,170 @@
-<p>home works!</p>
+<!-- <div class="background-image">
+    <div class="overlay">
+      <h1>Under Construction</h1>
+      <button mat-stroked-button (click)="openDialog()">Form</button>
+    </div>
+  </div> -->
+  
+  <header>
+    <nav class="container">
+      <div class="logo">LoveBoracay</div>
+      <ul class="nav-links">
+        <li><a href="#home" (click)="scrollToSection($event, 'home')">Home</a></li>
+        <li><a href="#events" (click)="scrollToSection($event, 'events')">Events</a></li>
+        <li><a href="#teams" (click)="scrollToSection($event, 'teams')">Teams</a></li>
+        <li><a href="#results" (click)="scrollToSection($event, 'results')">Results</a></li>
+        <li><a href="#matches" (click)="scrollToSection($event, 'matches')">Matches</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section id="home" class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <h1>Welcome to LoveBoracay</h1>
+        <p>Your Ultimate Sports Hub - Stay Updated with Latest Events, Teams, and Results</p>
+        <a  class="cta-button" (click)="openDialog()">Register Now!</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="events" class="section">
+    <h2 class="section-title fade-in">Upcoming Events</h2>
+    <div class="container">
+     
+      <div class="calendar-container fade-in">
+        <div class="calendar-header">
+          <button class="calendar-nav" (click)="changeMonth(-1)">‹</button>
+          <div class="calendar-month">{{ getCurrentMonthYear() }}</div>
+          <button class="calendar-nav" (click)="changeMonth(1)">›</button>
+        </div>
+        <div class="calendar-grid">
+          <!-- Day headers -->
+          <div *ngFor="let day of dayHeaders" class="calendar-day-header">{{ day }}</div>
+          <!-- Empty cells for days before first day of month -->
+          <div *ngFor="let empty of getEmptyDays()" class="calendar-day"></div>
+          <!-- Days of the month -->
+          <div *ngFor="let day of getDaysInMonth()" 
+               class="calendar-day"
+               [class.today]="isToday(day)"
+               [class.event-day]="hasEvent(day)"
+               [title]="hasEvent(day) ? 'Event scheduled' : ''"
+               (click)="onDayClick(day)">
+            {{ day }}
+          </div>
+        </div>
+      </div>
+
+      <div class="events-grid fade-in">
+        <div *ngFor="let event of upcomingEvents" class="event-card">
+          <div class="event-date">{{ event.date }}</div>
+          <h3 class="event-title">{{ event.title }}</h3>
+          <p class="event-description">{{ event.description }}</p>
+          <div class="event-location">📍 {{ event.location }}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+<!-- 
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title fade-in">Past Events</h2>
+      <div class="events-grid fade-in">
+        <div *ngFor="let event of pastEvents" class="event-card">
+          <div class="event-date">{{ event.date }}</div>
+          <h3 class="event-title">{{ event.title }}</h3>
+          <p class="event-description">{{ event.description }}</p>
+          <div class="event-location">📍 {{ event.location }}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="teams" class="section">
+    <div class="container">
+      <h2 class="section-title fade-in">Our Teams</h2>
+      <div class="teams-grid fade-in">
+        <div *ngFor="let team of teams" class="team-card">
+          <div class="team-logo">{{ team.logo }}</div>
+          <h3 class="team-name">{{ team.name }}</h3>
+          <p class="team-sport">{{ team.sport }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="results" class="section">
+    <div class="container">
+      <h2 class="section-title fade-in">Recent Results</h2>
+      <div class="results-list fade-in">
+        <div *ngFor="let result of results" class="result-item">
+          <div>
+            <div class="match-teams">{{ result.teams }}</div>
+            <div class="match-date">{{ result.date }}</div>
+          </div>
+          <div class="match-score">{{ result.score }}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="matches" class="section">
+    <div class="container">
+      <h2 class="section-title fade-in">Sports Categories</h2>
+      <div class="teams-grid fade-in">
+        <div *ngFor="let category of sportsCategories" class="team-card">
+          <div class="team-logo">{{ category.logo }}</div>
+          <h3 class="team-name">{{ category.name }}</h3>
+          <p class="team-sport">{{ category.sport }}</p>
+        </div>
+      </div>
+    </div>
+  </section> -->
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="#home" (click)="scrollToSection($event, 'home')">Home</a></li>
+            <li><a href="#events" (click)="scrollToSection($event, 'events')">Events</a></li>
+            <li><a href="#teams" (click)="scrollToSection($event, 'teams')">Teams</a></li>
+            <li><a href="#results" (click)="scrollToSection($event, 'results')">Results</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Sports</h3>
+          <ul>
+            <li><a href="#">Beach Basketball</a></li>
+            <li><a href="#">Beach Tennis</a></li>
+            <li><a href="#">Dragon Boat</a></li>
+            <li><a href="#">Swimming</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Contact Info</h3>
+          <ul>
+            <li><a href="#">📧 info.com</a></li>
+            <li><a href="#">📞 +1 (555) 123-4567</a></li>
+            <li><a href="#">📍 123 Malay, Aklan</a></li>
+            <li><a href="#">🌐 www.loveboracay.com</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Follow Us</h3>
+          <ul>
+            <li><a href="#">Facebook</a></li>
+            <li><a href="#">Twitter</a></li>
+            <li><a href="#">Instagram</a></li>
+            <li><a href="#">YouTube</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 LoveBoracay All rights reserved. Built with passion for sports.</p>
+<p>Credit to Ivan Joshua Merete</p>
+
+      </div>
+    </div>
+  </footer>

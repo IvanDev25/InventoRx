@@ -1,0 +1,117 @@
+.container {
+    max-width: 800px;
+  }
+  
+  .btn-cancel {
+    background-color: #6c757d;
+    border-color: #6c757d;
+  }
+  
+  .btn-save {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+  
+  .btn-cancel:hover, .btn-save:hover {
+    opacity: 0.9;
+  }
+
+  .modal {
+    display: block; /* Show the modal by default for Angular */
+  }
+  
+  .modal-dialog {
+    max-width: 600px;
+    margin: 30px auto;
+  }
+  
+  .close {
+    border: none;
+    background-color: #f8f9fa;
+  }
+  
+  .airport-name {
+    color: rgb(17, 17, 17); /* Change this to your desired color */
+    font-weight: bold;
+  }
+  
+  .modal-body {
+    padding: 20px;
+    display: flex;
+      gap: 40px;
+      flex-direction: column;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .btn-save {
+    display: block;
+    width: 100%;
+  }
+  
+  .container-body {
+    display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+  }
+  
+  .left, .right {
+    width: 100%;
+  }
+  
+  .btn-container {
+    gap: 7px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+  
+  .btn-submit {
+    height: 40px;
+    width: 70px;
+    border: none;
+    background-color: #f84646;
+    color: white;
+    font-size: 15px;
+    font-weight: 500;
+    border-radius: 5px;
+    font-family: 'Poppins';
+  }
+  
+  .btn-cancel {
+    height: 40px;
+    width: 70px;
+    border: none;
+    background-color: #b7b0b0;
+    color: white;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 5px;
+    font-family: 'Poppins';
+  }
+  .modal-title {
+    font-size: 13px;
+    font-family: 'Poppins';
+    font-weight: 400;
+  }
+
+  .modal-content {
+    border: none !important;
+  }
+  
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f8f9fa;
+    height: 50px;
+  }
+
+  .form-control:focus {
+    border: none;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    font-family: 'Poppins';
+  }

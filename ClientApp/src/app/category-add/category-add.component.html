@@ -1,0 +1,36 @@
+<div class="modal" tabindex="-1" role="dialog" id="addCategoryModal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Category</h5>
+          <button type="button" class="close" (click)="dialogRef.close()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="category" (ngSubmit)="onSubmit()">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label style="font-size: 12px; font-family: 'Poppins'; font-weight: 400; " for="categoryName">Category Name</label>
+                <input
+                  type="text"
+                  id="categoryName"
+                  formControlName="categoryName"
+                  class="form-control"
+                  [ngClass]="{ 'is-invalid': category.get('categoryName')?.invalid && category.get('categoryName')?.touched }"
+                />
+                <div *ngIf="category.get('categoryName')?.invalid && category.get('categoryName')?.touched" class="invalid-feedback">
+                  Category name is required and must be at least 3 characters long.
+                </div>
+              </div>
+            </div>
+            <div class="btn-container">
+              <button type="button" class="btn-cancel" (click)="dialogRef.close()">Cancel</button>
+              <button type="submit" class="btn-submit" [disabled]="category.invalid">Save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  

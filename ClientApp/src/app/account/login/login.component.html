@@ -1,4 +1,4 @@
-<div class="body-login">
+<!-- <div class="body-login">
     <div class="top">
         <div style="font-size: 1.75rem; color: #464e5f; font-family: 'Poppins';">Sign In</div>
         <div style="font-size: 13px; color: #6C757D;">Enter your username and password</div>
@@ -48,4 +48,66 @@
     
    
     
+</div> -->
+
+
+<div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;">
+    
+<div class="login-container">
+    <div class="logo">
+      <div class="logo-circle"></div>
+      <h2>Welcome Back</h2>
+      <p class="subtitle">Please sign in to your account</p>
+    </div>
+  
+    <form [formGroup]="loginForm" (ngSubmit)="login()">
+      <!-- Username -->
+      <div class="form-group">
+        <label for="userName">Username</label>
+        <input
+          type="text"
+          id="userName"
+          formControlName="userName"
+          [class.invalid]="submitted && loginForm.get('userName')?.invalid"
+        />
+        <div class="error" *ngIf="submitted && loginForm.get('userName')?.invalid">
+          Username is required.
+        </div>
+      </div>
+  
+      <!-- Password -->
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          formControlName="password"
+          [class.invalid]="submitted && loginForm.get('password')?.invalid"
+        />
+        <div class="error" *ngIf="submitted && loginForm.get('password')?.invalid">
+          Password is required.
+        </div>
+      </div>
+  
+      <!-- Errors from backend -->
+      <div *ngIf="errorMessages.length > 0" class="error-messages">
+        <div *ngFor="let error of errorMessages" class="error">{{ error }}</div>
+      </div>
+  
+      <!-- Actions -->
+      <div class="checkbox-group">
+        <div class="remember-me">
+          <input type="checkbox" id="remember" />
+          <label for="remember">Remember me</label>
+        </div>
+        <a href="#" (click)="resendEmailConfirmationLink()" class="forgot-password">
+          Forgot Password?
+        </a>
+      </div>
+  
+      <button type="submit" class="signin-btn">Sign In</button>
+    </form>
+  </div>
 </div>
+
+  

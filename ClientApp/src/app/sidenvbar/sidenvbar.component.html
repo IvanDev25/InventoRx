@@ -1,0 +1,53 @@
+<div class="container w-100 h-100" *ngIf="!hideNavbar">
+    <div class="left_div246_3995" [ngClass]="collapsed ? 'side-nav-collapse' : ''">
+        <div class="header_divi246_3995_210_8052">
+  
+                
+                
+        </div>
+        <div class="userdetails_divi246_3995_189_7875" [ngClass]="!collapsed ? '' : 'user-div-collapse'">
+        
+            <i *ngIf="!collapsed" class='fas fa-user-alt' style='font-size:30px;color:rgb(173, 173, 173)'></i>
+            <i *ngIf="collapsed" class='fas fa-user-alt' style='font-size:40px;color:rgb(173, 173, 173)'></i>
+      
+            <div class="details_divi246_3995_189_7682" *ngIf="!collapsed">
+                <span class="label__lbli246_3995_189_7501">Admin</span>
+            </div>
+        </div>
+    
+        <div class="nav-menu" *ngFor="let nav of filteredNavData">
+          
+          <div class="align">
+            <div>
+              <a class="side-nav-anchor" 
+                 [ngClass]="!collapsed ? '' : 'side-nav-icon-ifcollapse'"
+                 [routerLink]="[nav.routerLink]"
+                 routerLinkActive="active"
+                 [routerLinkActiveOptions]="{exact: true}"
+                 (click)="toggleSubMenu(nav)"
+                 matTooltip="{{ collapsed ? nav.label : '' }}"
+                 matTooltipPosition="right">
+                <i *ngIf="['dashboard', 'groups', 'summarize', 'event_note', 'settings', 'receipt', 'feed', 'inventory_2', 'person', 'group','local_shipping', 'directions_boat', 'person_check', 'home_repair_service', 'package_2', 'place', 'email','directions_car', 'diversity_3','track_changes'].includes(nav.icon)" class="material-icons side-nav-icon">{{ nav.icon }}</i>
+                <i *ngIf="nav.icon.startsWith('fa')" [class]="nav.icon"></i>
+                <span class="side-nav-lbl" *ngIf="!collapsed">{{ nav.label }}</span>
+              </a>
+            </div>
+  
+            <div style="cursor: pointer;" (click)="toggleSubMenu(nav)">
+              <!-- <i *ngIf="nav.subItem" class="material-icons">
+                {{ expandedItem === nav ? 'expand_less' : 'expand_more' }}
+            </i> -->
+            </div>
+          </div>
+            <!-- <div *ngIf="expandedItem === nav && nav.subItem" class="sub-menu">
+              <a *ngFor="let sub of nav.subItem"
+                 class="sub-nav-anchor"
+                 [routerLink]="[sub.routerLink]"
+                 routerLinkActive="active">
+                <span class="sub-nav-lbl">{{ sub.label }}</span>
+              </a>
+            </div> -->
+          </div>
+    </div>
+  </div>
+  

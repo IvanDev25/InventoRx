@@ -1,3 +1,158 @@
 .active {
     color: brown !important;
 }
+.mat-toolbar {
+    background-color: white;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Poppins';
+    background-color: #f5f5f5;
+  }
+  
+  .header {
+    background-color: white;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 12px 20px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 16px;
+    position: relative;
+    width: 100%;
+  }
+  
+  .language-selector, .user-profile {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
+    position: relative;
+  }
+  
+  .language-selector:hover, .user-profile:hover {
+    background-color: #f8f9fa;
+  }
+  
+  .flag-icon, .avatar {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+  }
+  
+  .flag-icon {
+    background: linear-gradient(to bottom, #FF0000 33%, #FFFFFF 33% 66%, #0000FF 66%);
+  }
+  
+  .avatar {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+  }
+  
+  .user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .user-name {
+    font-family: 'Poppins';
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    line-height: 1.2;
+  }
+  
+  .user-role {
+    font-family: 'Poppins';
+    font-size: 12px;
+    color: #666;
+    line-height: 1.2;
+  }
+  
+  .dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    min-width: 200px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s ease;
+    z-index: 1000;
+    margin-top: 8px;
+  }
+  
+  .dropdown.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  
+  .dropdown-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .dropdown-item:hover {
+    background-color: #f8f9fa;
+  }
+  
+  .dropdown-item:last-child {
+    border-bottom: none;
+  }
+  
+  .dropdown-icon {
+    width: 16px;
+    height: 16px;
+    opacity: 0.7;
+  }
+  
+  .dropdown-text {
+    font-family: 'Poppins';
+    font-size: 14px;
+    color: #333;
+  }
+  
+  .language-selector.active .dropdown-arrow {
+    transform: rotate(180deg);
+  }
+  
+  .dropdown-arrow {
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid #666;
+    transition: transform 0.2s ease;
+  }
+  
+  .language-dropdown {
+    min-width: 150px;
+  }

@@ -1,0 +1,76 @@
+
+.mat-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+td, th {
+  width: 25%;
+}
+
+.style-btn {
+  width: 100px;
+  height: 100%;
+  background-color: pink;
+  color: black;
+  font-size: 20px;
+}
+
+.th-header {
+  font-family: 'Poppins';
+  font-size: 13px;
+  font-weight: 500;
+  color: #363636;
+}
+.td-header {
+  font-family: 'Poppins';
+  font-size: 12px;
+  font-weight: 500;
+  color: #363636;
+}
+
+.mat-elevation-z8 {
+  border-radius: 10px;
+  overflow: hidden;
+}
+.search {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 15px;
+  padding-left: 10px;
+  border: 1px solid #ebebeb;
+  background: #f8f9fa;
+  width: 500px;
+  margin-bottom: 35px;
+  border-radius: 10px;
+}
+
+.col-id {
+  width: 50px;
+}
+.col-team {
+  width: 150px;
+}
+.col-category {
+  width: 150px;
+}
+.col-manager {
+  width: 150px;
+}
+.col-status {
+  width: 100px;
+}
+.col-action {
+  width: 120px;
+}
+.btn-btn-btn {
+  background-color: #00A9FE;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center
+}

@@ -1,0 +1,78 @@
+.modal {
+    display: block; /* Show the modal by default for Angular */
+  }
+  
+  .modal-dialog {
+    max-width: 600px;
+    margin: 30px auto;
+  }
+  
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f8f9fa;
+  }
+  .close {
+    border: none;
+    background-color: #f8f9fa;
+  }
+  
+  .airport-name {
+    color: rgb(17, 17, 17); /* Change this to your desired color */
+    font-weight: bold;
+  }
+  
+  .modal-body {
+    padding: 20px;
+    display: flex;
+      gap: 40px;
+      flex-direction: column;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .btn-save {
+    display: block;
+    width: 100%;
+  }
+  
+  .container-body {
+    display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+  }
+  
+  .left, .right {
+    width: 100%;
+  }
+  
+  .btn-container {
+    gap: 7px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+  
+  .btn-submit {
+    height: 40px;
+    width: 70px;
+    border: none;
+    background-color: #f32525;
+    color: white;
+    font-size: 15px;
+    font-weight: 500;
+  }
+  
+  .btn-cancel {
+    height: 40px;
+    width: 70px;
+    border: none;
+    background-color: #b7b0b0;
+    color: white;
+    font-size: 15px;
+    font-weight: 500;
+  }

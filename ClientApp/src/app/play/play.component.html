@@ -1,3 +1,90 @@
-<p *ngIf="message">
-{{message}}
-</p>
+<div style="padding: 100px;">
+
+  <div class="search">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M9.5 16C7.68333 16 6.146 15.3707 4.888 14.112C3.63 12.8533 3.00067 11.316 3 9.5C2.99933 7.684 3.62867 6.14667 4.888 4.888C6.14733 3.62933 7.68467 3 9.5 3C11.3153 3 12.853 3.62933 14.113 4.888C15.373 6.14667 16.002 7.684 16 9.5C16 10.2333 15.8833 10.925 15.65 11.575C15.4167 12.225 15.1 12.8 14.7 13.3L20.3 18.9C20.4833 19.0833 20.575 19.3167 20.575 19.6C20.575 19.8833 20.4833 20.1167 20.3 20.3C20.1167 20.4833 19.8833 20.575 19.6 20.575C19.3167 20.575 19.0833 20.4833 18.9 20.3L13.3 14.7C12.8 15.1 12.225 15.4167 11.575 15.65C10.925 15.8833 10.2333 16 9.5 16ZM9.5 14C10.75 14 11.8127 13.5627 12.688 12.688C13.5633 11.8133 14.0007 10.7507 14 9.5C13.9993 8.24933 13.562 7.187 12.688 6.313C11.814 5.439 10.7513 5.00133 9.5 5C8.24867 4.99867 7.18633 5.43633 6.313 6.313C5.43967 7.18967 5.002 8.252 5 9.5C4.998 10.748 5.43567 11.8107 6.313 12.688C7.19033 13.5653 8.25267 14.0027 9.5 14Z" fill="#706E6E"/>
+      </svg>
+      
+      <input
+  #input
+  style="width: 500px; height: 40px; padding: 15px; border: none; outline: none; border-radius: 10px;"
+  type="text"
+  placeholder="Search . . ."
+  (keyup)="applyFilter(input.value)"
+>
+
+  </div>
+  
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" matSort class="table-admin">
+
+<!-- Full Name Column -->
+<ng-container matColumnDef="fullName">
+  <th class="th-header" mat-header-cell *matHeaderCellDef mat-sort-header> Full Name </th>
+  <td class="td-header" mat-cell *matCellDef="let row"> {{ row.firstName }} {{ row.lastName }} </td>
+</ng-container>
+
+    
+      <!-- Email -->
+      <ng-container matColumnDef="email">
+        <th class="th-header" mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+        <td class="td-header" mat-cell *matCellDef="let row">{{ row.email }}</td>
+      </ng-container>
+    
+      <!-- Player Management -->
+      <ng-container matColumnDef="playerManagement">
+        <th class="th-header" mat-header-cell *matHeaderCellDef>Player Mgmt</th>
+        <td class="td-header" mat-cell *matCellDef="let row">
+          <mat-checkbox [checked]="row.playerManagement" disabled></mat-checkbox>
+        </td>
+      </ng-container>
+    
+      <!-- Admin Management -->
+      <ng-container matColumnDef="adminManagement">
+        <th class="th-header" mat-header-cell *matHeaderCellDef>Admin Mgmt</th>
+        <td class="td-header" mat-cell *matCellDef="let row">
+          <mat-checkbox [checked]="row.adminManagement" disabled></mat-checkbox>
+        </td>
+      </ng-container>
+    
+      <!-- Manager Management -->
+      <ng-container matColumnDef="managerManagement">
+        <th class="th-header" mat-header-cell *matHeaderCellDef>Manager Mgmt</th>
+        <td class="td-header" mat-cell *matCellDef="let row">
+          <mat-checkbox [checked]="row.managerManagement" disabled></mat-checkbox>
+        </td>
+      </ng-container>
+    
+      <!-- Category Management -->
+      <ng-container matColumnDef="categoryManagement">
+        <th class="th-header" mat-header-cell *matHeaderCellDef>Category Mgmt</th>
+        <td class="td-header" mat-cell *matCellDef="let row">
+          <mat-checkbox [checked]="row.categoryManagement" disabled></mat-checkbox>
+        </td>
+      </ng-container>
+    
+      <!-- Team Management -->
+      <ng-container matColumnDef="teamManagement">
+        <th class="th-header" mat-header-cell *matHeaderCellDef>Team Mgmt</th>
+        <td class="td-header" mat-cell *matCellDef="let row">
+          <mat-checkbox [checked]="row.teamManagement" disabled></mat-checkbox>
+        </td>
+      </ng-container>
+    
+    
+      <!-- Header and Data Rows -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    
+      <!-- No Data Row -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="9">No data matching the filter</td>
+      </tr>
+    </table>
+    
+  
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+  </div>
+  
+</div>
+

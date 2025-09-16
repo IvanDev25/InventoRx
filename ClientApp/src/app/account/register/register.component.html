@@ -1,71 +1,97 @@
-<div class="body-login">
-    <div class="top">
-        <div style="font-size: 1.75rem; color: #464e5f; font-family: 'Poppins';">Register</div>
-        <div style="font-size: 13px; color: #6C757D;">Let's Get Started</div>
-    </div>
+<div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;">
 
-    <main class="form-signin">
-        <form [formGroup]="registerForm" (ngSubmit)="register()" autocomplete="off">
-            <div class="form-floating mb-3" style="width: 100%;">
-                <input formControlName="firstName" type="text" placeholder="FirstName" class="form-control"
-                       [class.is-invalid]="submitted && registerForm.get('firstName')?.errors">
-                <label for="firstName" class="label-text">FirstName</label>
-                <span class="text-danger" *ngIf="submitted && registerForm.get('firstName')?.hasError('required')">
-                    First name is required
-                </span>
-                <span class="text-danger" *ngIf="submitted && 
-                        (registerForm.get('firstName')?.hasError('minlength') || registerForm.get('firstName')?.hasError('maxlength'))">
-                    First name must be at least 3, and maximum 15 characters
-                </span>
+    <div class="register-container">
+        <div class="logo">
+          <div class="logo-circle"></div>
+          <h2>Create Account</h2>
+          <p class="subtitle">Join us today and get started</p>
+        </div>
+      
+        <form [formGroup]="registerForm" (ngSubmit)="register()">
+          <div class="form-row">
+            <div class="form-group" [class.focused]="registerForm.get('firstName')?.touched || registerForm.get('firstName')?.dirty">
+              <label for="firstName">First Name</label>
+              <input
+                type="text"
+                id="firstName"
+                formControlName="firstName"
+                [class.invalid]="submitted && registerForm.get('firstName')?.invalid"
+                required
+              />
             </div>
-            
-            <div class="form-floating mb-3" style="width: 100%;">
-                <input formControlName="lastName" type="text" placeholder="LastName" class="form-control"
-                [class.is-invalid]="submitted && registerForm.get('lastName')?.errors">
-                <label for="lastName" class="label-text">LastName</label>
-                <span class="text-danger" *ngIf="submitted && registerForm.get('lastName')?.hasError('required')">
-                    Last name is required
-                </span>
-                <span class="text-danger" *ngIf="submitted && 
-                        (registerForm.get('lastName')?.hasError('minlength') || registerForm.get('lastName')?.hasError('maxlength'))">
-                    Last name must be at least 3, and maximum 15 characters
-                </span>
+      
+            <div class="form-group" [class.focused]="registerForm.get('lastName')?.touched || registerForm.get('lastName')?.dirty">
+              <label for="lastName">Last Name</label>
+              <input
+                type="text"
+                id="lastName"
+                formControlName="lastName"
+                [class.invalid]="submitted && registerForm.get('lastName')?.invalid"
+                required
+              />
             </div>
-            <div class="form-floating mb-3" style="width: 100%;">
-                <input formControlName="email" type="text" placeholder="LastName" class="form-control"
-                [class.is-invalid]="submitted && registerForm.get('email')?.errors">
-                <label for="email" class="label-text">Email</label>
-                <span class="text-danger" *ngIf="submitted && registerForm.get('email')?.hasError('required')">
-                    Email is required
-                </span>
-                <span class="text-danger" *ngIf="submitted && registerForm.get('email')?.hasError('pattern')">
-                    Invalid Email Address
-                </span>
+          </div>
+      
+          <div class="form-group" [class.focused]="registerForm.get('email')?.touched || registerForm.get('email')?.dirty">
+            <label for="email">Email Address</label>
+            <input
+              type="email"
+              id="email"
+              formControlName="email"
+              [class.invalid]="submitted && registerForm.get('email')?.invalid"
+              required
+            />
+          </div>
+      
+          <div class="form-group" [class.focused]="registerForm.get('password')?.touched || registerForm.get('password')?.dirty">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              formControlName="password"
+              [class.invalid]="submitted && registerForm.get('password')?.invalid"
+              required
+            />
+            <div class="password-strength">
+              <div class="strength-bar">
+                <div
+                class="strength-fill"
+                [ngClass]="passwordStrengthClass"
+                [style.width]="
+                  passwordStrengthClass === 'weak' ? '25%' :
+                  passwordStrengthClass === 'fair' ? '50%' :
+                  passwordStrengthClass === 'good' ? '75%' :
+                  passwordStrengthClass === 'strong' ? '100%' :
+                  '0%'
+                "
+              ></div>
+              
+              </div>
+              <span>{{ passwordStrengthText }}</span>
             </div>
-            <div class="form-floating mb-3">
-                <input formControlName="password" type="password" placeholder="Password" class="form-control"
-                [class.is-invalid]="submitted && registerForm.get('password')?.errors">
-                <label for="password"  class="label-text">Password</label>
-                <span class="text-danger" *ngIf="submitted && registerForm.get('password')?.hasError('required')">
-                    Password is required
-                </span>
-                <span class="text-danger" *ngIf="submitted && 
-                        (registerForm.get('password')?.hasError('minlength') || registerForm.get('password')?.hasError('maxlength'))">
-                    Password must be at least 3, and maximum 15 characters
-                </span>
+          </div>
+      
+          <div class="terms-group">
+            <div class="terms-checkbox">
+              <input type="checkbox" id="terms" formControlName="terms" />
+              <label for="terms">
+                I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+              </label>
             </div>
-
-            <div class="form-floating" *ngIf="errorMessages.length > 0">
-                <app-validation-messages [errorMessages]="errorMessages"></app-validation-messages>
+            <div *ngIf="submitted && registerForm.get('terms')?.invalid" class="error-text">
+              You must accept the terms.
             </div>
-            <button mat-flat-button color="primary" class="btn-register">Sign In</button>
+          </div>
+      
+          <button type="submit" class="register-btn" [disabled]="registerForm.invalid && submitted">
+            Create Account
+          </button>
         </form>
-
-        
-        
-
-    </main>
-    
-   
-    
+      
+        <div class="login-link">
+            Already have an account? <a routerLink="/account/login">Sign in here</a>
+          </div>          
+      </div>
+      
 </div>
+

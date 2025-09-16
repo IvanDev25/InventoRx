@@ -1,0 +1,110 @@
+<!-- <div style="padding: 60px;">
+    <div>  
+        <h2>Player List</h2>
+
+
+
+          <div *ngIf="players.length > 0">
+            <h3>Players under this Manager</h3>
+            <table>
+                <thead>
+                  <tr>
+                    <th>Player ID</th>
+                    <th>Player Name</th>
+                    <th>Age</th>
+                    <th>Email</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let player of players">
+                    <td>{{ player.id }}</td>
+                    <td>{{ player.name }}</td>
+                    <td>{{ player.age }}</td>
+                    <td>{{ player.email }}</td>
+                    <td>
+                        <div class="div-td">
+                            <button class="buttons" matTooltip="Delete" matTooltipPosition="above" title="Delete" (click)="openDeletePlayerDialog(player.id, player.name)">🗑️</button>
+                            <button class="buttons" matTooltip="Edit" matTooltipPosition="above" title="Edit">✏️</button>
+                            <button class="buttons" matTooltip="View" matTooltipPosition="above" title="View">👁️</button>
+                        </div>
+                      </td>
+                  </tr>
+                </tbody>
+              </table>
+        
+      
+        <div class="pagination">
+          <button class="active">1</button>
+          <button>2</button>
+          <span>...</span>
+          <button>20</button>
+        </div>
+      </div>
+      
+</div> -->
+
+
+
+
+<div style="padding: 100px;">
+
+  <div style="margin-bottom: 20px;">
+    <label style="font-size: 14px;
+    font-family: 'Poppins';">
+        Filter by Team:
+        <select class="input-select" [(ngModel)]="selectedManagerId" (change)="onManagerChange()">
+          <option *ngFor="let manager of managers" [value]="manager.id">
+            {{ manager.name }}
+          </option>
+        </select>
+      </label>
+      
+  </div>
+  
+  
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" matSort class="table-admin">
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="th-header col-id"> ID </th>
+        <td mat-cell *matCellDef="let row" class="td-header col-id"> {{row.id}} </td>
+      </ng-container>
+      
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="th-header col-team"> Manager Name </th>
+        <td mat-cell *matCellDef="let row" class="td-header col-team"> {{row.name}} </td>
+      </ng-container>
+      
+      <ng-container matColumnDef="age">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="th-header col-category"> Age </th>
+        <td mat-cell *matCellDef="let row" class="td-header col-category"> {{row.age}} </td>
+      </ng-container>
+      
+      <ng-container matColumnDef="phoneNumber">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="th-header col-manager"> Phone Number </th>
+        <td mat-cell *matCellDef="let row" class="td-header col-manager"> {{row.phoneNumber}} </td>
+      </ng-container>
+      
+  
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef class="th-header col-action"> Action </th>
+        <td mat-cell *matCellDef="let row" class="td-header col-action">
+          <button matTooltip="Edit" matTooltipPosition="above" title="Edit" mat-icon-button style="color: orange;"><mat-icon>edit</mat-icon></button>
+          <button  matTooltip="Delete" matTooltipPosition="above" title="Delete" (click)="openDeletePlayerDialog(row.id, row.name)" mat-icon-button style="color: red;"><mat-icon>delete</mat-icon></button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  
+      <!-- Row shown when there is no matching data. -->
+      <!-- <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+      </tr> -->
+    </table>
+  
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+  </div>
+  
+</div>
+

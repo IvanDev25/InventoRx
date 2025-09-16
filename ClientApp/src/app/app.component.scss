@@ -1,0 +1,27 @@
+p {
+    font-family: Lato;
+  }
+  
+  .container {
+    height: 100vh !important;
+    max-width: 100vw !important;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    width: 1440px;
+    background-color: rgba(255, 255, 255, 255);
+  }
+  
+  .right_div {
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    width: 100%;
+    height: 100%;
+    position: sticky;
+  }

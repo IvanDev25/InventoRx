@@ -1,9 +1,6 @@
-<mat-toolbar fxLayout="row" fxLayoutAlign="space-between center">
-    <div>
-        <span>Identity App</span>
-        <button mat-button color="primary" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</button>
-        <button mat-button color="primary" routerLink="/play" routerLinkActive="active">Play</button>
-        
+<mat-toolbar class="tool" fxLayout="row" fxLayoutAlign="space-between center" *ngIf="!hideNavbar">
+    <!-- <div>
+        <button mat-button color="primary" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</button> 
     </div>
     
     <div style="width: 203px; height: 40px; background-color: #FBFBFB; border-radius: 6px; border: none;" fxLayout="row" fxLayoutAlign="space-around center">
@@ -45,4 +42,62 @@
                   </button>
                   </mat-menu>                     
     </div>
-  </mat-toolbar>
+  </mat-toolbar> -->
+
+
+  <div class="header" *ngIf="!hideNavbar">
+    <div class="language-selector" [class.active]="activeDropdown === 'language'" (click)="toggleDropdown('language')">
+      <div class="flag-icon">{{ flag }}</div>
+      <span class="language-text">{{ language }}</span>
+      <div class="dropdown-arrow"></div>
+  
+      <div class="dropdown language-dropdown" [class.active]="activeDropdown === 'language'">
+        <div class="dropdown-item" (click)="selectLanguage('🇺🇸', 'Eng (US)')">
+          <span class="dropdown-icon">🇺🇸</span>
+          <span class="dropdown-text">English (US)</span>
+        </div>
+        <div class="dropdown-item" (click)="selectLanguage('🇬🇧', 'Eng (UK)')">
+          <span class="dropdown-icon">🇬🇧</span>
+          <span class="dropdown-text">English (UK)</span>
+        </div>
+        <div class="dropdown-item" (click)="selectLanguage('🇪🇸', 'Español')">
+          <span class="dropdown-icon">🇪🇸</span>
+          <span class="dropdown-text">Español</span>
+        </div>
+        <div class="dropdown-item" (click)="selectLanguage('🇫🇷', 'Français')">
+          <span class="dropdown-icon">🇫🇷</span>
+          <span class="dropdown-text">Français</span>
+        </div>
+      </div>
+    </div>
+  
+    <div class="user-profile" (click)="toggleDropdown('user')" *ngIf="(accountService.user$ | async) as user">
+      <div class="avatar">J</div>
+      <div class="user-info">
+        <div class="user-name">{{user.firstName | titlecase}}</div>
+        <div class="user-name" *ngIf="(accountService.user$ | async) === null">Stranger</div>
+        <div class="user-role">Admin</div>
+      </div>
+      <div class="dropdown-arrow"></div>
+  
+      <div class="dropdown" [class.active]="activeDropdown === 'user'">
+        <div class="dropdown-item">
+          <span class="dropdown-icon">👤</span>
+          <span class="dropdown-text">Profile</span>
+        </div>
+        <div class="dropdown-item">
+          <span class="dropdown-icon">⚙️</span>
+          <span class="dropdown-text">Settings</span>
+        </div>
+        <div class="dropdown-item">
+          <span class="dropdown-icon">❓</span>
+          <span class="dropdown-text">Help</span>
+        </div>
+        <div class="dropdown-item" routerLink="/account/login"(click)="logout()" *ngIf="(accountService.user$ | async) as user">
+          <span class="dropdown-icon">🚪</span>
+          <span class="dropdown-text">Logout</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  
