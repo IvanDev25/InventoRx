@@ -24,7 +24,7 @@ export class LoginComponent implements OnInit{
       this.accountService.user$.pipe(take(1)).subscribe ({
         next: (user:User | null) => {
           if (user) {
-            this.router.navigateByUrl('/');
+            this.router.navigateByUrl('/dashboard');
           } else {
             this.activatedRoute.queryParamMap.subscribe({
               next: (params: any) =>{
@@ -58,7 +58,7 @@ export class LoginComponent implements OnInit{
               if (this.returnUrl) {
                 this.router.navigateByUrl(this.returnUrl);
               }else {
-                this.router.navigateByUrl('/');
+                this.router.navigateByUrl('/dashboard');
               }
             },
             error: error => {

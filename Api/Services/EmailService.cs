@@ -1,4 +1,4 @@
-﻿using Api.DTOs.Account;
+﻿using Api.Entity.Account;
 using Mailjet.Client;
 using Mailjet.Client.TransactionalEmails;
 using Microsoft.Extensions.Configuration;

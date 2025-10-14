@@ -1,0 +1,132 @@
+.custom-paginator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Poppins', sans-serif;
+}
+
+.pagination-container {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.35) !important;
+  padding: 12px 24px;
+  /* bottom-left and bottom-right only */
+  border-radius: 0 0 12px 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+  
+}
+
+.pagination-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: 'Poppins', sans-serif;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  
+  &:hover:not(.disabled) {
+    color: #783AEE;
+    background-color: rgba(120, 58, 238, 0.1);
+  }
+  
+  &.disabled {
+    color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+  
+  svg {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+.page-numbers {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.page-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: none;
+  border: none;
+  color: #783AEE;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: 'Poppins', sans-serif;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  
+  &:hover:not(.active) {
+    background-color: rgba(120, 58, 238, 0.1);
+    color: #783AEE;
+  }
+  
+  &.active {
+    background-color: #783AEE;
+    color: white;
+    box-shadow: 0 2px 8px rgba(120, 58, 238, 0.3);
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .pagination-container {
+    gap: 12px;
+    padding: 10px 16px;
+  }
+  
+  .pagination-btn {
+    font-size: 12px;
+    padding: 6px 8px;
+  }
+  
+  .page-number {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pagination-container {
+    gap: 8px;
+    padding: 8px 12px;
+  }
+  
+  .pagination-btn {
+    font-size: 11px;
+    padding: 4px 6px;
+    
+    svg {
+      width: 10px;
+      height: 10px;
+    }
+  }
+  
+  .page-number {
+    width: 28px;
+    height: 28px;
+    font-size: 11px;
+  }
+}
+

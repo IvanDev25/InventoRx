@@ -22,7 +22,7 @@ namespace Api.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Api.DTOs.Account.AdminPermission", b =>
+            modelBuilder.Entity("Api.Entity.Account.AdminPermission", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -56,7 +56,29 @@ namespace Api.Data.Migrations
                     b.ToTable("AdminPermissions");
                 });
 
-            modelBuilder.Entity("Api.DTOs.Account.City", b =>
+            modelBuilder.Entity("Api.Entity.Account.Audit", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedToday")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Audits");
+                });
+
+            modelBuilder.Entity("Api.Entity.Account.City", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -75,7 +97,7 @@ namespace Api.Data.Migrations
                     b.ToTable("City");
                 });
 
-            modelBuilder.Entity("Api.DTOs.Account.Country", b =>
+            modelBuilder.Entity("Api.Entity.Account.Country", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -89,6 +111,110 @@ namespace Api.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Country");
+                });
+
+            modelBuilder.Entity("Api.Entity.Account.Medicine", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("ExpirationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("GenericName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Issuance")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MedicineSupplierId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Refill")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Return")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Stock")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MedicineSupplierId");
+
+                    b.ToTable("Medicines");
+                });
+
+            modelBuilder.Entity("Api.Entity.Account.MedicineSupplier", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("SupplierName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MedicineSuppliers");
+                });
+
+            modelBuilder.Entity("Api.Entity.Account.Patient", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsAdmitted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PatientName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Patients");
+                });
+
+            modelBuilder.Entity("Api.Entity.Account.PatientMedicine", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("MedicineId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PatientId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MedicineId");
+
+                    b.HasIndex("PatientId", "MedicineId")
+                        .IsUnique();
+
+                    b.ToTable("PatientMedicines");
                 });
 
             modelBuilder.Entity("Api.Models.User", b =>
@@ -240,6 +366,21 @@ namespace Api.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Managers");
+                });
+
+            modelBuilder.Entity("MedicinePatient", b =>
+                {
+                    b.Property<int>("MedicinesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PatientsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("MedicinesId", "PatientsId");
+
+                    b.HasIndex("PatientsId");
+
+                    b.ToTable("MedicinePatient");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -434,6 +575,51 @@ namespace Api.Data.Migrations
                     b.ToTable("Teams");
                 });
 
+            modelBuilder.Entity("Api.Entity.Account.Medicine", b =>
+                {
+                    b.HasOne("Api.Entity.Account.MedicineSupplier", "MedicineSupplier")
+                        .WithMany("Medicines")
+                        .HasForeignKey("MedicineSupplierId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MedicineSupplier");
+                });
+
+            modelBuilder.Entity("Api.Entity.Account.PatientMedicine", b =>
+                {
+                    b.HasOne("Api.Entity.Account.Medicine", "Medicine")
+                        .WithMany("PatientMedicines")
+                        .HasForeignKey("MedicineId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Api.Entity.Account.Patient", "Patient")
+                        .WithMany("PatientMedicines")
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Medicine");
+
+                    b.Navigation("Patient");
+                });
+
+            modelBuilder.Entity("MedicinePatient", b =>
+                {
+                    b.HasOne("Api.Entity.Account.Medicine", null)
+                        .WithMany()
+                        .HasForeignKey("MedicinesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Api.Entity.Account.Patient", null)
+                        .WithMany()
+                        .HasForeignKey("PatientsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -483,6 +669,21 @@ namespace Api.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Api.Entity.Account.Medicine", b =>
+                {
+                    b.Navigation("PatientMedicines");
+                });
+
+            modelBuilder.Entity("Api.Entity.Account.MedicineSupplier", b =>
+                {
+                    b.Navigation("Medicines");
+                });
+
+            modelBuilder.Entity("Api.Entity.Account.Patient", b =>
+                {
+                    b.Navigation("PatientMedicines");
                 });
 #pragma warning restore 612, 618
         }

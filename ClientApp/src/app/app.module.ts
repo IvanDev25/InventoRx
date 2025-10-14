@@ -15,6 +15,7 @@ import { TeamComponent } from './team/team.component';
 import { TeamDetailModalComponent } from './team-detail-modal/team-detail-modal.component';
 import { ManagerComponent } from './manager/manager.component';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { CategoryComponent } from './category/category.component';
 import { CategoryDeleteComponent } from './category-delete/category-delete.component';
 import { CategoryEditComponent } from './category-edit/category-edit.component';
@@ -22,6 +23,19 @@ import { CategoryAddComponent } from './category-add/category-add.component';
 import { PlayerComponent } from './player/player.component';
 import { PlayerDeleteComponent } from './player-delete/player-delete.component';
 import { TeamFormModalComponent } from './team-form-modal/team-form-modal.component';
+import { MedicineComponent } from './medicine/medicine.component';
+import { MedicineAddSupplierModalComponent } from './medicine-add-supplier-modal/medicine-add-supplier-modal.component';
+import { MedicineAddModalComponent } from './medicine-add-modal/medicine-add-modal.component';
+import { MedicineEditModalComponent } from './medicine-edit-modal/medicine-edit-modal.component';
+import { MedicineDeleteModalComponent } from './medicine-delete-modal/medicine-delete-modal.component';
+import { AuditLogComponent } from './audit-log/audit-log.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { PatientComponent } from './patient/patient.component';
+import { PatientAddModalComponent } from './patient-add-modal/patient-add-modal.component';
+import { PatientEditModalComponent } from './patient-edit-modal/patient-edit-modal.component';
+import { PatientDeleteModalComponent } from './patient-delete-modal/patient-delete-modal.component';
+import { PatientDischargeModalComponent } from './patient-discharge-modal/patient-discharge-modal.component';
+import { ToastContainerComponent } from './components/toast-container/toast-container.component';
 
 @NgModule({
   declarations: [
@@ -41,14 +55,27 @@ import { TeamFormModalComponent } from './team-form-modal/team-form-modal.compon
     PlayerComponent,
     PlayerDeleteComponent,
     TeamFormModalComponent,
+    MedicineComponent,
+    MedicineAddSupplierModalComponent,
+    MedicineAddModalComponent,
+    MedicineEditModalComponent,
+    MedicineDeleteModalComponent,
+    AuditLogComponent,
+    DashboardComponent,
+    PatientComponent,
+    PatientAddModalComponent,
+    PatientEditModalComponent,
+    PatientDeleteModalComponent,
+    PatientDischargeModalComponent,
+    ToastContainerComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     SharedModule,
-    CommonModule
-
+    CommonModule,
+    FormsModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}

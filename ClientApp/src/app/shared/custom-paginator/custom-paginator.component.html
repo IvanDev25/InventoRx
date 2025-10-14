@@ -1,0 +1,45 @@
+<div class="custom-paginator">
+  <div class="pagination-container">
+    <!-- Previous Button -->
+    <button 
+      class="pagination-btn prev-btn" 
+      [class.disabled]="isFirstPage()"
+      (click)="goToPrevious()"
+      [disabled]="isFirstPage()">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7.5 9L4.5 6L7.5 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Previous
+    </button>
+
+
+
+    <div style="display: flex; flex-direction: row; align-items: center; justify-content: center;">
+    <!-- Page Numbers -->
+    <div class="page-numbers">
+      <button 
+        *ngFor="let page of visiblePages" 
+        class="page-number"
+        [class.active]="page === currentPage"
+        (click)="goToPage(page)">
+        {{ page }}
+      </button>
+    </div>
+
+    <!-- Next Button -->
+    <button 
+      class="pagination-btn next-btn" 
+      [class.disabled]="isLastPage()"
+      (click)="goToNext()"
+      [disabled]="isLastPage()">
+      Next
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4.5 3L7.5 6L4.5 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    </div>
+
+
+  </div>
+</div>
+

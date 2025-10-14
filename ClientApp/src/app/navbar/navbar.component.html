@@ -46,37 +46,55 @@
 
 
   <div class="header" *ngIf="!hideNavbar">
-    <div class="language-selector" [class.active]="activeDropdown === 'language'" (click)="toggleDropdown('language')">
-      <div class="flag-icon">{{ flag }}</div>
-      <span class="language-text">{{ language }}</span>
-      <div class="dropdown-arrow"></div>
-  
-      <div class="dropdown language-dropdown" [class.active]="activeDropdown === 'language'">
-        <div class="dropdown-item" (click)="selectLanguage('🇺🇸', 'Eng (US)')">
-          <span class="dropdown-icon">🇺🇸</span>
-          <span class="dropdown-text">English (US)</span>
+
+
+    <div>
+      <div class="page-title">{{currentPageTitle}}</div>
+    </div>
+
+    <div class="user-section" *ngIf="(accountService.user$ | async) as user">
+      <!-- Notification Bell -->
+      <div class="notification-bell" (click)="toggleDropdown('notification')">
+        <div class="bell-icon">
+          <svg width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 9C3 4.2 7 3 9 3C13.8 3 15 7 15 9V13L17 15H1L3 13V9Z" fill="#783AEE"/>
+            <path d="M9 3C7 3 3 4.2 3 9V13L1 15H17L15 13V9C15 7 13.8 3 9 3ZM9 3V1ZM6 16C6 17 6.6 19 9 19C11.4 19 12 17 12 16" fill="#783AEE"/>
+            <path d="M9 3C7 3 3 4.2 3 9V13L1 15H17L15 13V9C15 7 13.8 3 9 3ZM9 3V1M6 16C6 17 6.6 19 9 19C11.4 19 12 17 12 16" stroke="#783AEE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div class="notification-badge" *ngIf="notificationCount > 0">{{notificationCount}}</div>
         </div>
-        <div class="dropdown-item" (click)="selectLanguage('🇬🇧', 'Eng (UK)')">
-          <span class="dropdown-icon">🇬🇧</span>
-          <span class="dropdown-text">English (UK)</span>
-        </div>
-        <div class="dropdown-item" (click)="selectLanguage('🇪🇸', 'Español')">
-          <span class="dropdown-icon">🇪🇸</span>
-          <span class="dropdown-text">Español</span>
-        </div>
-        <div class="dropdown-item" (click)="selectLanguage('🇫🇷', 'Français')">
-          <span class="dropdown-icon">🇫🇷</span>
-          <span class="dropdown-text">Français</span>
+        
+        <div class="notification-dropdown" [class.active]="activeDropdown === 'notification'">
+          <div class="notification-header">
+            <h3>Medicine Alerts</h3>
+            <span class="notification-count">{{notificationCount}} notifications</span>
+          </div>
+          <div class="notification-list">
+            <div class="notification-item" *ngFor="let notification of notifications" [class]="notification.type" (click)="navigateToMedicine()">
+              <div class="notification-icon">
+                <span *ngIf="notification.type === 'low-stock'">⚠️</span>
+                <span *ngIf="notification.type === 'expiry'">⏰</span>
+              </div>
+              <div class="notification-content">
+                <div class="notification-title">{{notification.title}}</div>
+                <div class="notification-message">{{notification.message}}</div>
+                <div class="notification-time">{{notification.time}}</div>
+              </div>
+            </div>
+            <div class="no-notifications" *ngIf="notifications.length === 0">
+              <div class="no-notifications-icon">🔔</div>
+              <div class="no-notifications-text">No notifications</div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  
-    <div class="user-profile" (click)="toggleDropdown('user')" *ngIf="(accountService.user$ | async) as user">
+
+      <div class="user-profile" (click)="toggleDropdown('user')">
       <div class="avatar">J</div>
       <div class="user-info">
         <div class="user-name">{{user.firstName | titlecase}}</div>
         <div class="user-name" *ngIf="(accountService.user$ | async) === null">Stranger</div>
-        <div class="user-role">Admin</div>
+        <div class="user-role">Pharmacist</div>
       </div>
       <div class="dropdown-arrow"></div>
   
@@ -84,10 +102,6 @@
         <div class="dropdown-item">
           <span class="dropdown-icon">👤</span>
           <span class="dropdown-text">Profile</span>
-        </div>
-        <div class="dropdown-item">
-          <span class="dropdown-icon">⚙️</span>
-          <span class="dropdown-text">Settings</span>
         </div>
         <div class="dropdown-item">
           <span class="dropdown-icon">❓</span>
@@ -98,6 +112,7 @@
           <span class="dropdown-text">Logout</span>
         </div>
       </div>
+    </div>
     </div>
   </div>
   

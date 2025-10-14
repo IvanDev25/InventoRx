@@ -18,5 +18,9 @@ export class TeamService {
   getTeamById(id: number) {
     return this.http.get(`${environment.appUrl}/api/Team/${id}`);
   }
+
+  getMedicine(): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.appUrl}/api/Medicine`);
+  }
   
 }

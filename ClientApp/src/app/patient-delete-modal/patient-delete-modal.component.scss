@@ -1,0 +1,104 @@
+:host {
+  display: block;
+}
+
+.delete-modal {
+  background: white;
+  border-radius: 15px !important;
+  padding: 40px 30px;
+  text-align: center;
+  width: 571px;
+  height: 351px;
+  margin: 0 auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon-container {
+  margin-bottom: 24px;
+}
+
+.warning-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  
+  svg {
+    width: 59px;
+    height: 60px;
+  }
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 600;
+  color: #41454A;
+  margin: 0 0 16px 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+.message {
+  margin-bottom: 32px;
+  
+  p {
+    font-size: 18px;
+    font-weight: 400;
+    color: #41454A;
+    margin: 0 0 8px 0;
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.5;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.button-container {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.btn {
+  height: 48px;
+  width: 250px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  font-family: 'Poppins', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-cancel {
+  background: white;
+  color: #41454A;
+  border: 1px solid #989898;
+  
+  &:hover {
+    background-color: #F8F9FA;
+    border-color: #7A7A7A;
+  }
+}
+
+.btn-delete {
+  background: #CC3232;
+  color: white;
+  
+  &:hover {
+    background-color: #B02A2A;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(204, 50, 50, 0.3);
+  }
+}
+
+

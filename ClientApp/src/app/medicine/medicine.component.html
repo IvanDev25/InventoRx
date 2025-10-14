@@ -1,0 +1,176 @@
+<div class="medicine-container" style="padding: 100px;">
+
+    <!-- Global Search Bar -->
+    <div class="global-search-container">
+      <div class="supplier-search-bar">
+        <i class="search-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M20 20.0002L15.657 15.6572M15.657 15.6572C16.3998 14.9143 16.9891 14.0324 17.3912 13.0618C17.7932 12.0911 18.0002 11.0508 18.0002 10.0002C18.0002 8.9496 17.7932 7.90929 17.3912 6.93866C16.9891 5.96803 16.3998 5.08609 15.657 4.34321C14.9141 3.60032 14.0321 3.01103 13.0615 2.60898C12.0909 2.20693 11.0506 2 9.99996 2C8.94936 2 7.90905 2.20693 6.93842 2.60898C5.96779 3.01103 5.08585 3.60032 4.34296 4.34321C2.84263 5.84354 1.99976 7.87842 1.99976 10.0002C1.99976 12.122 2.84263 14.1569 4.34296 15.6572C5.84329 17.1575 7.87818 18.0004 9.99996 18.0004C12.1217 18.0004 14.1566 17.1575 15.657 15.6572Z" stroke="#989898" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg></i>
+        <input type="text" placeholder="Search" class="search-input" (keyup)="applyFilter($event)">
+      </div>
+      
+      <div class="supplier-controls">
+        <button class="add-medicine-btn" (click)="openAddMedicineDialog()"> <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M6 8H1C0.71667 8 0.479337 7.904 0.288004 7.712C0.0966702 7.52 0.000670115 7.28267 3.44827e-06 7C-0.000663218 6.71734 0.0953369 6.48 0.288004 6.288C0.48067 6.096 0.718003 6 1 6H6V1C6 0.71667 6.096 0.479337 6.288 0.288004C6.48 0.0966702 6.71734 0.000670115 7 3.44827e-06C7.28267 -0.000663218 7.52034 0.0953369 7.713 0.288004C7.90567 0.48067 8.00134 0.718003 8 1V6H13C13.2833 6 13.521 6.096 13.713 6.288C13.905 6.48 14.0007 6.71734 14 7C13.9993 7.28267 13.9033 7.52034 13.712 7.713C13.5207 7.90567 13.2833 8.00134 13 8H8V13C8 13.2833 7.904 13.521 7.712 13.713C7.52 13.905 7.28267 14.0007 7 14C6.71734 13.9993 6.48 13.9033 6.288 13.712C6.096 13.5207 6 13.2833 6 13V8Z" fill="white"/>
+</svg>
+
+Add Medicine</button>
+      </div>
+    </div>
+
+
+
+
+
+  
+  <div class="body-content">
+    <table mat-table [dataSource]="dataSource" matSort class="custom-table">
+
+ <!-- Generic Name -->
+ <ng-container matColumnDef="genericName">
+  <th class="th-header" mat-header-cell *matHeaderCellDef mat-sort-header>Generic Name</th>
+  <td class="td-body" mat-cell *matCellDef="let row">{{ row.genericName }}</td>
+</ng-container>
+
+<!-- Supplier Name -->
+<ng-container matColumnDef="supplierName">
+  <th class="th-header" mat-header-cell *matHeaderCellDef mat-sort-header>Consignor</th>
+  <td class="td-body" mat-cell *matCellDef="let row">{{ row.medicineSupplier?.supplierName || 'N/A' }}</td>
+</ng-container>
+
+<!-- Price -->
+<ng-container matColumnDef="price">
+  <th class="th-header" mat-header-cell *matHeaderCellDef mat-sort-header>Price</th>
+  <td class="td-body" mat-cell *matCellDef="let row">₱{{ row.price | number:'1.2-2' }}</td>
+</ng-container>
+
+<!-- Stock -->
+<ng-container matColumnDef="stock">
+  <th class="th-header" mat-header-cell *matHeaderCellDef mat-sort-header>Stock</th>
+  <td class="td-body" mat-cell *matCellDef="let row">{{ row.stock }}</td>
+</ng-container>
+
+<!-- Expiration -->
+<ng-container matColumnDef="expirationDate">
+  <th class="th-header" mat-header-cell *matHeaderCellDef mat-sort-header>Expiration Date</th>
+  <td class="td-body" mat-cell *matCellDef="let row">{{ row.expirationDate | date }}</td>
+</ng-container>
+
+
+
+<!-- Status -->
+<ng-container matColumnDef="status">
+  <th class="th-header" mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+  <td class="td-body" mat-cell *matCellDef="let row">
+    <div class="status-container">
+      <div 
+        *ngFor="let badge of getStatusBadges(row.status)" 
+        class="status-badge"
+        [style.background-color]="badge.bgColor"
+        [style.color]="badge.textColor">
+        {{ badge.text }}
+      </div>
+    </div>
+   </td>
+</ng-container>
+
+<!-- Action -->
+<ng-container matColumnDef="action">
+  <th class="th-header" mat-header-cell *matHeaderCellDef>Action</th>
+  <td class="td-body" mat-cell *matCellDef="let row">
+    <div class="action-buttons">
+      <button mat-icon-button color="primary" (click)="editMedicine(row)">
+        <mat-icon><svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M9.70667 3.7041H2.33333C1.04417 3.7041 0 4.81127 0 6.1751V18.5278C0 19.8928 1.04417 20.9988 2.33333 20.9988H15.1667C16.4558 20.9988 17.5 19.8928 17.5 18.5278V9.4861L12.9337 14.3208C12.5349 14.7472 12.0156 15.0418 11.445 15.1654L8.31717 15.8281C6.2755 16.2598 4.4765 14.3546 4.88483 12.1939L5.51017 8.88177C5.62333 8.28444 5.901 7.73494 6.30817 7.30444L9.70667 3.7041Z" fill="#41454A"/>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M19.6535 1.53655C19.5355 1.23792 19.3626 0.964069 19.1436 0.729216C18.9284 0.499533 18.6688 0.31579 18.3806 0.189049C18.0967 0.0643748 17.79 0 17.48 0C17.1699 0 16.8632 0.0643748 16.5793 0.189049C16.2911 0.31579 16.0316 0.499533 15.8163 0.729216L15.1793 1.40355L18.5066 4.92688L19.1436 4.25138C19.3649 4.01831 19.5381 3.74399 19.6535 3.44405C19.8938 2.83093 19.8938 2.14967 19.6535 1.53655ZM16.8581 6.67338L13.5296 3.14888L7.95648 9.05222C7.87425 9.13983 7.8188 9.24912 7.79665 9.36721L7.17131 12.6805C7.08965 13.1122 7.45015 13.4925 7.85731 13.4062L10.9863 12.7447C11.1002 12.7193 11.2038 12.6604 11.2838 12.5755L16.8581 6.67338Z" fill="#41454A"/>
+          </svg>
+          </mat-icon>
+      </button>
+      <button mat-icon-button color="warn" (click)="deleteMedicine(row)">
+        <mat-icon><svg width="16" height="18" viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 18C2.45 18 1.97933 17.8043 1.588 17.413C1.19667 17.0217 1.00067 16.5507 1 16V3H0V1H5V0H11V1H16V3H15V16C15 16.55 14.8043 17.021 14.413 17.413C14.0217 17.805 13.5507 18.0007 13 18H3ZM5 14H7V5H5V14ZM9 14H11V5H9V14Z" fill="#41454A"/>
+          </svg>
+          </mat-icon>
+      </button>
+      <div class="refill-button-container">
+        <!-- Normal refill button -->
+        <div *ngIf="!isRefilling(row.id)">
+          <button class="refill-btn" (click)="refillMedicine(row)">
+            Refill
+          </button>
+          <div class="warning-indicator" *ngIf="hasLowStock(row.status)">
+            <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8.5 0.1875C10.7046 0.1875 12.8189 1.06328 14.3778 2.62217C15.9367 4.18107 16.8125 6.29539 16.8125 8.5C16.8125 10.7046 15.9367 12.8189 14.3778 14.3778C12.8189 15.9367 10.7046 16.8125 8.5 16.8125C6.29539 16.8125 4.18107 15.9367 2.62217 14.3778C1.06328 12.8189 0.1875 10.7046 0.1875 8.5C0.1875 6.29539 1.06328 4.18107 2.62217 2.62217C4.18107 1.06328 6.29539 0.1875 8.5 0.1875ZM8.5 3.75C8.34923 3.74987 8.2001 3.78118 8.06211 3.84194C7.92413 3.9027 7.80034 3.99157 7.69865 4.10287C7.59695 4.21418 7.51959 4.34547 7.4715 4.48836C7.42342 4.63126 7.40566 4.78261 7.41938 4.93275L7.85281 9.68987C7.86962 9.84981 7.94505 9.99786 8.06455 10.1055C8.18406 10.2131 8.33918 10.2726 8.5 10.2726C8.66082 10.2726 8.81594 10.2131 8.93544 10.1055C9.05495 9.99786 9.13038 9.84981 9.14719 9.68987L9.57944 4.93275C9.59314 4.78271 9.57542 4.63146 9.5274 4.48865C9.47939 4.34583 9.40213 4.2146 9.30057 4.10331C9.199 3.99203 9.07535 3.90313 8.93751 3.8423C8.79967 3.78147 8.65067 3.75003 8.5 3.75ZM8.5 13.25C8.75196 13.25 8.99359 13.1499 9.17175 12.9718C9.34991 12.7936 9.45 12.552 9.45 12.3C9.45 12.048 9.34991 11.8064 9.17175 11.6282C8.99359 11.4501 8.75196 11.35 8.5 11.35C8.24804 11.35 8.00641 11.4501 7.82825 11.6282C7.65009 11.8064 7.55 12.048 7.55 12.3C7.55 12.552 7.65009 12.7936 7.82825 12.9718C8.00641 13.1499 8.24804 13.25 8.5 13.25Z" fill="#FF9C11"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Refill input interface -->
+        <div *ngIf="isRefilling(row.id)" class="refill-input-container">
+          <div class="refill-input-wrapper">
+            <input 
+              type="number" 
+              class="refill-input" 
+              placeholder="Quantity" 
+              [(ngModel)]="refillQuantity"
+              min="1"
+              (keyup.enter)="saveRefill(row)"
+              (keyup.escape)="cancelRefill()"
+              #refillInput>
+            
+            <div class="refill-actions">
+              <!-- Cancel button (X icon) -->
+              <button 
+                class="refill-action-btn cancel-btn" 
+                (click)="cancelRefill()"
+                title="Cancel">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 4L4 12M4 4L12 12" stroke="#FF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              
+              <!-- Save button (R icon) -->
+              <button 
+                class="refill-action-btn save-btn" 
+                (click)="saveRefill(row)"
+                title="Save Refill">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M13.5 4.5L6 12L2.5 8.5" stroke="#37A35C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </td>
+</ng-container>  
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+      <!-- No Data -->
+      <tr class="mat-row mat-no-data-row" *matNoDataRow>
+        <td class="mat-cell" colspan="7">
+          <div class="no-data-message">
+            <span class="no-data-icon">📋</span>
+            <p class="no-data-text">No medicine data found</p>
+            <p class="no-data-subtext">Try adjusting your search or add new medicines</p>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <app-custom-paginator
+      [currentPage]="currentPage"
+      [totalPages]="totalPages"
+      [pageSize]="pageSize"
+      [totalItems]="totalItems"
+      [maxVisiblePages]="5"
+      (pageChange)="onPageChange($event)">
+    </app-custom-paginator>
+  </div>
+
+</div>
+  
+

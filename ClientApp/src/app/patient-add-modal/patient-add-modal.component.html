@@ -1,0 +1,114 @@
+<div class="container">
+    <div class="header">
+      <div class="header-content">
+        <div class="patient-icon">
+          <svg width="26" height="28" viewBox="0 0 26 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13 2C10.2386 2 8 4.23858 8 7C8 9.76142 10.2386 12 13 12C15.7614 12 18 9.76142 18 7C18 4.23858 15.7614 2 13 2ZM13 14C9.13401 14 2 15.6863 2 19.5V22C2 23.1046 2.89543 24 4 24H22C23.1046 24 24 23.1046 24 22V19.5C24 15.6863 16.866 14 13 14Z" fill="white"/>
+          </svg>
+        </div>
+        <h1>Add Patient</h1>
+      </div>
+      <button type="button" class="close-btn" (click)="onClose()">
+        <span>&times;</span>
+      </button>
+    </div>
+  
+    <div class="form-container">
+      <form (ngSubmit)="onAdd()" #patientForm="ngForm">
+        
+        <!-- Patient Name -->
+        <div class="form-group">
+          <label for="patientName">Patient Name</label>
+          <input
+            type="text"
+            id="patientName"
+            placeholder="Enter Patient Name"
+            [(ngModel)]="patientData.patientName"
+            name="patientName"
+            required
+          />
+        </div>
+
+        <!-- Is Admitted Checkbox -->
+        <div class="form-group">
+          <div class="checkbox-container">
+            <input
+              type="checkbox"
+              id="isAdmitted"
+              [(ngModel)]="patientData.isAdmitted"
+              name="isAdmitted"
+              class="admission-checkbox"
+            />
+            <label for="isAdmitted" class="checkbox-label">
+              <span class="checkbox-text">Patient is admitted</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Medicine Selection -->
+        <div class="medicine-row">
+          <label for="medicines">Select Medicines</label>
+
+          <div style="display: flex; flex-direction: row; width: 100%; align-items: center; gap: 8px;">
+            <div class="medicine-input-wrapper">
+              <mat-form-field appearance="outline" class="medicine-select-field">
+                <mat-label>Search and select medicines</mat-label>
+                <input
+                  matInput
+                  placeholder="Type to search medicines..."
+                  [(ngModel)]="searchTerm"
+                  (input)="onSearchInputChange()"
+                  [matAutocomplete]="auto"
+                  name="medicineSearch">
+                <mat-icon matSuffix>search</mat-icon>
+                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onOptionSelected($event)">
+                  <mat-option 
+                    *ngFor="let medicine of filteredMedicines" 
+                    [value]="medicine"
+                    [class.selected-medicine]="medicine.selected">
+                    <mat-checkbox 
+                      [checked]="medicine.selected"
+                      (click)="toggleMedicineSelection(medicine); $event.stopPropagation()">
+                      <div class="medicine-info">
+                        <span class="medicine-name">{{ medicine.genericName }}</span>
+                        <div class="medicine-details">
+                          <span class="stock-info">Stock: {{ medicine.stock }}</span>
+                          <span class="supplier-info">{{ medicine.medicineSupplier?.supplierName || 'No Supplier' }}</span>
+                        </div>
+                      </div>
+                    </mat-checkbox>
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+            </div>
+          </div>
+          
+          <div class="selected-medicines" *ngIf="selectedMedicines.length > 0">
+            <h4>Selected Medicines:</h4>
+            <div class="selected-item" *ngFor="let medicine of selectedMedicines">
+              <span>{{ medicine.genericName }}</span>
+              <button 
+                type="button" 
+                class="remove-btn"
+                (click)="removeMedicine(medicine)">
+                ×
+              </button>
+            </div>
+          </div>
+        </div>
+  
+        <div class="button-container">
+          <button type="submit" class="btn btn-add" [class.btn-admit]="patientData.isAdmitted">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" *ngIf="!patientData.isAdmitted">
+              <path d="M6 1V11M1 6H11" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" *ngIf="patientData.isAdmitted">
+              <path d="M10 3L4.5 8.5L2 6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            {{ patientData.isAdmitted ? 'Admit' : 'Add' }}
+          </button>
+          <button type="button" class="btn btn-cancel" (click)="onClose()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>

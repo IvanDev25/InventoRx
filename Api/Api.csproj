@@ -8,14 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="DTOs\NewFolder1\**" />
-    <Compile Remove="DTOs\NewFolder\**" />
-    <Content Remove="DTOs\NewFolder1\**" />
-    <Content Remove="DTOs\NewFolder\**" />
-    <EmbeddedResource Remove="DTOs\NewFolder1\**" />
-    <EmbeddedResource Remove="DTOs\NewFolder\**" />
-    <None Remove="DTOs\NewFolder1\**" />
-    <None Remove="DTOs\NewFolder\**" />
+    <Compile Remove="Entity\NewFolder1\**" />
+    <Compile Remove="Entity\NewFolder\**" />
+    <Content Remove="Entity\NewFolder1\**" />
+    <Content Remove="Entity\NewFolder\**" />
+    <EmbeddedResource Remove="Entity\NewFolder1\**" />
+    <EmbeddedResource Remove="Entity\NewFolder\**" />
+    <None Remove="Entity\NewFolder1\**" />
+    <None Remove="Entity\NewFolder\**" />
   </ItemGroup>
 
   <ItemGroup>

@@ -7,6 +7,7 @@ import { AccountService } from './account/account.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
+  isAuthLoading = true;
 
   constructor(private accountService: AccountService) {
     
@@ -20,13 +21,20 @@ export class AppComponent implements OnInit {
     const jwt = this.accountService.getJWT();
     if (jwt) {
       this.accountService.refreshUser(jwt).subscribe({
-        next: _ => {},
+        next: _ => {
+          this.isAuthLoading = false;
+        },
         error: _ => {
           this.accountService.logout();
+          this.isAuthLoading = false;
         }
       })
     } else {
-      this.accountService.refreshUser(null).subscribe();
+      this.accountService.refreshUser(null).subscribe({
+        next: _ => {
+          this.isAuthLoading = false;
+        }
+      });
     }
   }
   title = 'Ivan Identity';

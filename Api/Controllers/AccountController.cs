@@ -1,4 +1,4 @@
-﻿using Api.DTOs.Account;
+﻿using Api.Entity.Account;
 using Api.Models;
 using Api.Services;
 using Microsoft.AspNetCore.Authorization;

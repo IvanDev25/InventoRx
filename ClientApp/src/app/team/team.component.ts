@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { TeamService } from './team.service';
 import { MatDialog } from '@angular/material/dialog';
-import { TeamDetailModalComponent } from '../team-detail-modal/team-detail-modal.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { TeamDetailModalComponent } from '../team-detail-modal/team-detail-modal.component';
 
 @Component({
   selector: 'app-team',
@@ -11,49 +12,53 @@ import { MatPaginator } from '@angular/material/paginator';
   styleUrls: ['./team.component.scss']
 })
 export class TeamComponent implements OnInit {
-  displayedColumns: string[] = ['id', 'teamName', 'categoryName', 'managerName', 'status', 'action'];
-  dataSource = new MatTableDataSource<any>();
+  displayedColumns: string[] = ['genericName', 'price', 'stock', 'expirationDate', 'status', 'action'];
+  dataSource = new MatTableDataSource<any>([]);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private teamService: TeamService, private dialog: MatDialog) {}
+  constructor(
+    private medicineService: TeamService,
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
-    this.loadTeams();
+    this.loadMedicines();
   }
 
-  loadTeams(): void {
-    this.teamService.getTeams().subscribe(
+  loadMedicines(): void {
+    this.medicineService.getMedicine().subscribe(
       (data) => {
         this.dataSource.data = data;
         this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+
+        // Search should be case-insensitive
+        this.dataSource.filterPredicate = (data: any, filter: string) =>
+          data.genericName.toLowerCase().includes(filter.trim().toLowerCase());
+
+        this.cdr.detectChanges();
       },
       (error) => {
-        console.error('Error fetching teams:', error);
+        console.error('Error fetching medicines:', error);
       }
     );
   }
 
-  applyFilter(filterValue: string): void {
+  applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  viewTeam(id: number): void {
-    this.teamService.getTeamById(id).subscribe(data => {
-      this.dialog.open(TeamDetailModalComponent, {
-        width: '400px',
-        data: data
-      });
-    });
+  editMedicine(row: any): void {
+    console.log('Edit:', row);
+    // open your edit modal here
   }
 
-  editTeam(id: number): void {
-    // Handle edit
-    console.log('Edit team with ID:', id);
-  }
-
-  deleteTeam(id: number): void {
-    // Handle delete
-    console.log('Delete team with ID:', id);
+  deleteMedicine(row: any): void {
+    console.log('Delete:', row);
+    // add confirmation + delete logic here
   }
 }

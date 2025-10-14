@@ -1,11 +1,19 @@
 
-<div class="container w-100 h-100">
+<div class="container w-100 h-100" *ngIf="!isAuthLoading">
   <app-sidenvbar></app-sidenvbar>
   <div class="right_div" style="background-color: #FAFBFC;">
       <app-navbar></app-navbar>
       <router-outlet ></router-outlet>
   </div>
 </div>
+
+<!-- Loading spinner while authentication is being checked -->
+<div *ngIf="isAuthLoading" class="auth-loading">
+  <div class="loading-spinner"></div>
+</div>
+
+<!-- Toast Notifications Container -->
+<app-toast-container></app-toast-container>
 
 
 

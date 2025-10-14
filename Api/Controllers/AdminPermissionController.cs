@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using Api.Services;
-using Api.DTOs.Account;
+using Api.Entity.Account;
 
 namespace Api.Controllers
 {

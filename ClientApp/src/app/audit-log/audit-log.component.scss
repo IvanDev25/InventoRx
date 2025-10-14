@@ -1,0 +1,383 @@
+.medicine-container {
+  padding: 20px;
+  background-image: url('../../assets/eclipessss.png');
+  background-size: cover;          /* Make image cover entire area */
+  background-repeat: no-repeat;    /* Prevent image repetition */
+  background-position: center;     /* Center the image nicely */
+  height: 90vh;
+  overflow-y: auto;
+  font-family: 'Poppins', sans-serif;
+}
+
+
+// Global Search Container
+.global-search-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.search-results-info {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  color: #666;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(120, 58, 238, 0.2);
+  
+  .highlight {
+    color: #783AEE;
+    font-weight: 600;
+  }
+}
+
+// Supplier Search Bar
+.supplier-search-bar {
+  display: flex;
+  align-items: center;
+  background-color: #f8f8f8;
+  border-radius: 8px;
+  padding: 0 15px;
+  font-family: 'Poppins';
+  border: 2px solid white;
+  width: 347px;
+  height: 48px;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+  
+  &:focus-within {
+    border-color: #783AEE;
+    box-shadow: 0 0 0 3px rgba(120, 58, 238, 0.1);
+    background-color: white;
+  }
+  
+  .search-icon {
+    margin-right: 12px;
+    display: flex;
+    align-items: center;
+    transition: color 0.3s ease;
+    
+    svg {
+      width: 22px;
+      height: 22px;
+    }
+  }
+  
+  &:focus-within .search-icon {
+    color: #783AEE;
+  }
+  
+  .search-input {
+    font-size: 16px;
+    background: transparent;
+    border: none;
+    outline: none;
+    flex: 1;
+    color: #333;
+    font-family: 'Poppins', sans-serif;
+    transition: color 0.3s ease;
+    
+    &::placeholder {
+      color: #999;
+      transition: color 0.3s ease;
+    }
+    
+    &:focus::placeholder {
+      color: #bbb;
+    }
+  }
+}
+
+
+.mat-form-field {
+    font-size: 14px;
+    width: 100%;
+  }
+  
+  td, th {
+    //width: 25%;
+  }
+  
+  .style-btn {
+    width: 100px;
+    height: 100%;
+    background-color: pink;
+    color: black;
+    font-size: 20px;
+  }
+  
+  .th-header {
+    font-family: 'Poppins';
+    font-size: 13px;
+    font-weight: 500;
+    color: #363636;
+  }
+  .td-header {
+    font-family: 'Poppins';
+    font-size: 12px;
+    font-weight: 500;
+    color: #363636;
+  }
+  
+  .mat-elevation-z8 {
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .search {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+    padding-left: 10px;
+    border: 1px solid #ebebeb;
+    background: #f8f9fa;
+    width: 500px;
+    margin-bottom: 35px;
+    border-radius: 10px;
+  }
+  
+  .col-name {
+    width: 200px;
+  }
+  .col-description {
+    width: 400px;
+  }
+  .col-date {
+    width: 200px;
+  }
+  
+  .status-verified {
+    background-color: #CDFED0;
+    color: #499047;
+  }
+  
+  .status-pending {
+    background-color: #FFF9C6;
+    color: #CC9F00;
+  }
+  
+  .statuses-bg {
+    padding: 5px;
+    padding-left: 10px;
+    border-radius: 20px;
+    width: 50%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+  }
+
+
+  .body-content {
+    width: 100%;
+  }
+  
+  table {
+    width: 100%;
+  }
+  
+  .custom-table {
+    border-collapse: separate;
+    border-spacing: 0 3px; /* small vertical gap between rows */
+  }
+
+  .th-header {
+    font-size: 16px;
+    font-weight: 600;
+    color: #783AEE;
+    font-family: 'Poppins';
+  }
+  
+  .td-body {
+    font-size: 14px;
+    font-weight: 600;
+    color: #41454A;
+    font-family: 'Poppins';
+  }
+  /* ===== Angular Material Table Container ===== */
+  ::ng-deep .mat-mdc-table {
+    border-collapse: separate !important;
+    border-spacing: 0 3px !important;
+    background: transparent !important;
+    border-top-left-radius: 15px !important;
+    border-top-right-radius: 15px !important;
+    overflow: hidden !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* ===== Header Row ===== */
+  ::ng-deep .mat-mdc-header-row {
+    background: rgba(255, 255, 255, 0.55) !important;
+    border-top-left-radius: 15px !important;
+    border-top-right-radius: 15px !important;
+  }
+  
+  /* ===== Data Rows ===== */
+  ::ng-deep .mat-mdc-row {
+    background: rgba(255, 255, 255, 0.35) !important;
+  }
+  
+  
+  /* ===== Paginator (make it look like bottom of the same card) ===== */
+  ::ng-deep .mat-mdc-paginator {
+    background: rgba(255, 255, 255, 0.55) !important;
+    border-bottom-left-radius: 15px !important;
+    border-bottom-right-radius: 15px !important;
+    overflow: hidden;
+  }
+  
+  /* Optional: subtle border on top of paginator for separation */
+  ::ng-deep .mat-mdc-paginator-container {
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 8px 16px !important;
+    justify-content: space-between;
+  }
+
+  /* ===== No Data Row Styling ===== */
+  ::ng-deep .mat-mdc-table .mat-mdc-row.mat-row.mat-no-data-row {
+    background: rgba(255, 255, 255, 0.8) !important;
+    border-radius: 12px;
+    margin: 20px 0;
+    
+    .mat-mdc-cell {
+      text-align: center !important;
+      padding: 0 !important;
+      font-family: 'Poppins', sans-serif !important;
+      border: none !important;
+      background: transparent !important;
+      
+      .no-data-message {
+        padding: 60px 20px;
+        margin: 0;
+        
+        .no-data-icon {
+          font-size: 48px;
+          margin-bottom: 16px;
+          opacity: 0.6;
+          display: block;
+        }
+        
+        .no-data-text {
+          font-size: 18px;
+          font-weight: 500;
+          color: #666;
+          margin: 0 0 8px 0;
+        }
+        
+        .no-data-subtext {
+          font-size: 14px;
+          color: #999;
+          margin: 0;
+        }
+      }
+    }
+  }
+
+  /* Alternative selector for no data row */
+  ::ng-deep .mat-mdc-table tr[matNoDataRow] {
+    background: rgba(255, 255, 255, 0.8) !important;
+    border-radius: 12px;
+    margin: 20px 0;
+    
+    td {
+      text-align: center !important;
+      padding: 0 !important;
+      font-family: 'Poppins', sans-serif !important;
+      border: none !important;
+      background: transparent !important;
+      
+      .no-data-message {
+        padding: 60px 20px;
+        margin: 0;
+        
+        .no-data-icon {
+          font-size: 48px;
+          margin-bottom: 16px;
+          opacity: 0.6;
+          display: block;
+        }
+        
+        .no-data-text {
+          font-size: 18px;
+          font-weight: 500;
+          color: #666;
+          margin: 0 0 8px 0;
+        }
+        
+        .no-data-subtext {
+          font-size: 14px;
+          color: #999;
+          margin: 0;
+        }
+      }
+    }
+  }
+
+  /* Direct styling for no data message */
+  .no-data-message {
+    text-align: center;
+    padding: 60px 20px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 12px;
+    margin: 20px 0;
+    font-family: 'Poppins', sans-serif;
+    
+    .no-data-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.6;
+      display: block;
+    }
+    
+    .no-data-text {
+      font-size: 18px;
+      font-weight: 500;
+      color: #666;
+      margin: 0 0 8px 0;
+    }
+    
+    .no-data-subtext {
+      font-size: 14px;
+      color: #999;
+      margin: 0;
+    }
+  }
+
+  /* Specific styling for no data table cell */
+  ::ng-deep .mat-mdc-table .mat-mdc-cell:has(.no-data-message) {
+    text-align: center !important;
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+  }
+
+  /* Alternative approach for older browsers */
+  ::ng-deep .mat-mdc-table .mat-mdc-cell .no-data-message {
+    text-align: center !important;
+    padding: 60px 20px !important;
+    background: rgba(255, 255, 255, 0.8) !important;
+    border-radius: 12px !important;
+    margin: 20px 0 !important;
+    font-family: 'Poppins', sans-serif !important;
+    display: block !important;
+  }
+
+  /* Force styling for no data row */
+  ::ng-deep .mat-mdc-table tr[matNoDataRow] {
+    background: rgba(255, 255, 255, 0.8) !important;
+    border-radius: 12px !important;
+    
+    td {
+      text-align: center !important;
+      padding: 0 !important;
+      border: none !important;
+      background: transparent !important;
+    }
+  }
+  
+  
+  

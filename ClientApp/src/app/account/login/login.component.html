@@ -51,61 +51,67 @@
 </div> -->
 
 
-<div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;">
-    
-<div class="login-container">
-    <div class="logo">
-      <div class="logo-circle"></div>
-      <h2>Welcome Back</h2>
-      <p class="subtitle">Please sign in to your account</p>
+<div class="login-background">
+  <div class="login-container">
+    <!-- Logo and Brand -->
+    <div class="logo-section">
+      <div class="logo-icon">
+        <svg width="56" height="80" viewBox="0 0 112 161" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M33.4573 36.729C33.2317 30.3225 33.4138 23.5381 35.6582 18.2378C36.8417 15.4524 38.5477 13.2002 41.0177 11.6045C43.4996 10.0049 47.0621 8.87484 52.2713 8.87484C58.1098 8.87484 62.9746 11.0077 66.458 13.228C68.1877 14.3343 69.5375 15.4365 70.444 16.2522C70.8671 16.6352 71.2764 17.0334 71.6711 17.446L71.7107 17.4858V17.4897C72.0558 17.8806 72.4742 18.1993 72.9419 18.4276C73.4095 18.656 73.9174 18.7895 74.4364 18.8205C74.9554 18.8515 75.4754 18.7795 75.9667 18.6085C76.458 18.4375 76.911 18.171 77.2998 17.824C77.6887 17.477 78.0057 17.0564 78.2328 16.5863C78.46 16.1162 78.5928 15.6057 78.6236 15.0839C78.6545 14.5622 78.5829 14.0394 78.4128 13.5455C78.2427 13.0517 77.9775 12.5963 77.6323 12.2054L74.723 14.7919C77.6323 12.2054 77.6244 12.1974 77.6244 12.1974L77.6086 12.1775L77.569 12.1378C77.4132 11.9606 77.2521 11.788 77.0861 11.6205C76.6463 11.176 76.1935 10.7448 75.7284 10.3272C74.1563 8.92162 72.4753 7.64424 70.7013 6.50723C66.3867 3.76559 60.0534 0.916504 52.2713 0.916504C45.9142 0.916504 40.7802 2.30523 36.7427 4.90761C32.6934 7.52192 30.0532 11.1549 28.3748 15.1181C25.4536 22.014 25.3111 30.231 25.5327 36.729H4.5417C2.35274 36.729 0.559616 38.5196 0.808991 40.7002C3.24337 62.1081 25.1923 79.0713 52.4969 80.4123V112.333H60.4136V80.3645C67.0025 79.9694 73.4978 78.6018 79.6907 76.3058C79.7302 76.7621 79.75 77.2356 79.75 77.7264C79.75 80.7585 77.284 84.3875 72.2252 87.539C69.6314 89.132 66.8371 90.3685 63.9167 91.2157V99.4367C68.3223 98.4125 72.5342 96.6791 76.3894 94.3036C82.22 90.6865 87.6667 84.9684 87.6667 77.7303C87.6667 76.0989 87.5163 74.4873 87.1798 72.9235C100.508 65.7451 109.663 54.0941 111.191 40.7042C111.44 38.5236 109.643 36.733 107.458 36.733L33.4573 36.729Z" fill="#783AEE"/>
+          <path d="M79.75 140.187C79.75 144.823 78.325 148.894 75.7165 152.125H87.6667V160.083H24.3334V152.125H52.4969V136.208H60.4136V151.783C63.5882 151.262 66.0977 150.175 67.9027 148.747C70.3767 146.797 71.8334 143.988 71.8334 140.187C71.8334 136.387 70.3767 133.582 67.9027 131.628C65.3298 129.591 61.324 128.246 56 128.246C49.9952 128.246 43.3334 127.772 38.0648 125.421C35.3573 124.211 32.8596 122.436 31.0467 119.838C29.218 117.212 28.2917 114.024 28.2917 110.344C28.2917 106.663 29.218 103.476 31.0467 100.849C32.8596 98.251 35.3613 96.4763 38.0648 95.2667C41.0732 93.9217 44.5446 93.1895 48.0834 92.8115V100.822C45.4788 101.152 43.1671 101.697 41.279 102.541C39.5334 103.321 38.3221 104.283 37.5344 105.414C36.7665 106.516 36.2084 108.056 36.2084 110.344C36.2084 112.632 36.7625 114.172 37.5344 115.274C38.3221 116.404 39.5334 117.367 41.279 118.147C44.9207 119.774 50.1298 120.292 56 120.292C62.5471 120.292 68.445 121.935 72.7952 125.369C77.2484 128.887 79.75 134.04 79.75 140.187Z" fill="#783AEE"/>
+        </svg>
+      </div>
+      <h1 class="brand-name">InventoRx</h1>
     </div>
-  
-    <form [formGroup]="loginForm" (ngSubmit)="login()">
-      <!-- Username -->
+
+    <!-- Login Form -->
+    <form [formGroup]="loginForm" (ngSubmit)="login()" class="login-form">
+      <!-- Email Field -->
       <div class="form-group">
-        <label for="userName">Username</label>
         <input
           type="text"
           id="userName"
           formControlName="userName"
+          placeholder="Email Address"
           [class.invalid]="submitted && loginForm.get('userName')?.invalid"
         />
         <div class="error" *ngIf="submitted && loginForm.get('userName')?.invalid">
           Username is required.
         </div>
       </div>
-  
-      <!-- Password -->
+
+      <!-- Password Field -->
       <div class="form-group">
-        <label for="password">Password</label>
         <input
           type="password"
           id="password"
           formControlName="password"
+          placeholder="Password"
           [class.invalid]="submitted && loginForm.get('password')?.invalid"
         />
         <div class="error" *ngIf="submitted && loginForm.get('password')?.invalid">
           Password is required.
         </div>
       </div>
-  
+
       <!-- Errors from backend -->
       <div *ngIf="errorMessages.length > 0" class="error-messages">
         <div *ngFor="let error of errorMessages" class="error">{{ error }}</div>
       </div>
-  
-      <!-- Actions -->
-      <div class="checkbox-group">
+
+      <!-- Remember Me and Forgot Password -->
+      <div class="form-options">
         <div class="remember-me">
           <input type="checkbox" id="remember" />
           <label for="remember">Remember me</label>
         </div>
         <a href="#" (click)="resendEmailConfirmationLink()" class="forgot-password">
-          Forgot Password?
+          Forgot password?
         </a>
       </div>
-  
-      <button type="submit" class="signin-btn">Sign In</button>
+
+      <!-- Login Button -->
+      <button type="submit" class="login-btn">Log in</button>
     </form>
   </div>
 </div>

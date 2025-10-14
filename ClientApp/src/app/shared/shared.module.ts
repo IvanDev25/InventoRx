@@ -24,11 +24,14 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { CustomPaginatorComponent } from './custom-paginator/custom-paginator.component';
 @NgModule({
   declarations: [
     NotFoundComponent,
     ValidationMessagesComponent,
-    NoificationComponent
+    NoificationComponent,
+    CustomPaginatorComponent
   ],
   imports: [
     CommonModule,
@@ -54,7 +57,9 @@ import { MatSelectModule } from '@angular/material/select';
     HttpClientModule,
     ValidationMessagesComponent,
     MatSelectModule,
-    MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule,MatTooltipModule,MatDialogModule,CommonModule,MatDialogModule
+    MatAutocompleteModule,
+    MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule,MatTooltipModule,MatDialogModule,CommonModule,MatDialogModule,
+    CustomPaginatorComponent
   ]
 })
 export class SharedModule { }

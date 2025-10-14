@@ -1,0 +1,41 @@
+<!-- medicine-add-supplier-modal.component.html -->
+<div class="container">
+    <div class="header">
+      <div class="header-content">
+        <div class="supplier-icon">
+          <svg width="26" height="28" viewBox="0 0 26 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13 2C10.2386 2 8 4.23858 8 7C8 9.76142 10.2386 12 13 12C15.7614 12 18 9.76142 18 7C18 4.23858 15.7614 2 13 2ZM13 14C9.13401 14 2 15.6863 2 19.5V22C2 23.1046 2.89543 24 4 24H22C23.1046 24 24 23.1046 24 22V19.5C24 15.6863 16.866 14 13 14Z" fill="white"/>
+          </svg>
+        </div>
+        <h1>Add Supplier</h1>
+      </div>
+      <button type="button" class="close-btn" (click)="close()">
+        <span>&times;</span>
+      </button>
+    </div>
+  
+    <div class="form-container">
+      <form [formGroup]="supplierForm" (ngSubmit)="save()">
+        <div class="form-group">
+          <label for="supplierName">Supplier Name</label>
+          <input
+            type="text"
+            id="supplierName"
+            formControlName="supplierName"
+            placeholder="Enter supplier name"
+          />
+        </div>
+  
+        <div class="button-container">
+          <button type="submit" class="btn btn-add" [disabled]="isLoading">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 1V11M1 6H11" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            {{ isLoading ? 'Saving...' : 'Add' }}
+          </button>
+          <button type="button" class="btn btn-cancel" (click)="close()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  

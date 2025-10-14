@@ -1,0 +1,108 @@
+<div class="container">
+    <div class="header">
+      <div class="header-content">
+        <div class="pill-icon">
+          <svg width="26" height="28" viewBox="0 0 26 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19.623 19.7793L22.4558 16.7898C23.2863 15.9259 23.9465 14.8971 24.3986 13.7628C24.8506 12.6284 25.0855 11.4108 25.0897 10.1802C25.0939 8.94966 24.8673 7.73036 24.423 6.5926C23.9786 5.45484 23.3254 4.42109 22.5008 3.55093C21.6763 2.68077 20.6967 1.99139 19.6186 1.5225C18.5404 1.05361 17.385 0.814491 16.2189 0.818908C15.0529 0.823325 13.8991 1.07119 12.8242 1.54824C11.7493 2.02528 10.7744 2.72206 9.9558 3.59845L7.12299 6.58794L19.623 19.7793ZM17.9667 21.5271L5.46674 8.33579L2.63393 11.3253C1.80347 12.1892 1.1432 13.2179 0.691163 14.3523C0.239122 15.4867 0.0042423 16.7042 5.6939e-05 17.9348C-0.00412843 19.1654 0.222463 20.3847 0.666776 21.5225C1.11109 22.6602 1.76434 23.694 2.5889 24.5641C3.41346 25.4343 4.39303 26.1237 5.47116 26.5926C6.5493 27.0614 7.7047 27.3006 8.87079 27.2961C10.0369 27.2917 11.1906 27.0439 12.2655 26.5668C13.3405 26.0898 14.3153 25.393 15.1339 24.5166L17.9667 21.5271Z" fill="white"/>
+          </svg>
+        </div>
+        <h1>Add Medicine</h1>
+      </div>
+      <button type="button" class="close-btn" (click)="onClose()">
+        <span>&times;</span>
+      </button>
+    </div>
+  
+    <div class="form-container">
+      <form (ngSubmit)="onAdd()" #medicineForm="ngForm">
+        
+        <!-- Generic Name -->
+        <div class="form-group">
+          <label for="genericName">Generic Name</label>
+          <input
+            type="text"
+            id="genericName"
+            placeholder="Enter Generic Name"
+            [(ngModel)]="medicineData.genericName"
+            name="genericName"
+            required
+          />
+        </div>
+  
+        <!-- Price -->
+        <div class="form-group">
+          <label for="price">Price</label>
+          <input
+            type="number"
+            id="price"
+            placeholder="Enter Price"
+            [(ngModel)]="medicineData.price"
+            name="price"
+            required
+          />
+        </div>
+  
+        <!-- Expiration Date -->
+        <div class="form-group">
+          <label for="expirationDate">Expiration Date</label>
+          <input
+            type="date"
+            id="expirationDate"
+            [(ngModel)]="medicineData.expirationDate"
+            name="expirationDate"
+            required
+          />
+        </div>
+  
+        <!-- Stock -->
+        <div class="form-group">
+          <label for="stock">Stock</label>
+          <input
+            type="number"
+            id="stock"
+            placeholder="Enter Stock"
+            [(ngModel)]="medicineData.stock"
+            name="stock"
+            required
+          />
+        </div>
+  
+        <!-- Consignor Selection -->
+        <div class="consignor-row">
+          <label for="consignor">Consignor</label>
+
+          <div style="display: flex; flex-direction: row; width: 100%; align-items: center; gap: 8px;">
+            <div class="consignor-input-wrapper">
+              <select id="consignor" [(ngModel)]="selectedSupplierId" name="consignor" (change)="medicineData.medicineSupplierId = selectedSupplierId">
+                <option value="" disabled selected>Enter Consignor</option>
+                <option *ngFor="let supplier of suppliers" [value]="supplier.id">
+                  {{ supplier.supplierName }}
+                </option>
+              </select>
+            </div>
+            <div>
+              <button type="button" class="btn btn-add-small" (click)="openAddSupplierDialog()">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M6 1V11M1 6H11" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                Add
+              </button>
+            </div>
+          </div>
+
+
+        </div>
+  
+        <div class="button-container">
+          <button type="submit" class="btn btn-add">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 1V11M1 6H11" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Add
+          </button>
+          <button type="button" class="btn btn-cancel" (click)="onClose()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  

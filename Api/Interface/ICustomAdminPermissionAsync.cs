@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Api.DTOs.Account;
+using Api.Entity.Account;
 using Api.ViewModel;
 using Api.Web.Response;
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Data;
 using Api.Constant;
-using Api.DTOs.Account;
+using Api.Entity.Account; 
 using Microsoft.AspNetCore.Identity;
 using Api.Models;
 using Dapper;
@@ -34,7 +34,7 @@ namespace Api.Services
 
                 var parameters = new
                 {
-                    EventName =
+                    EventName = eventDto.EventName
                 };
 
                 var eventId = await _dapperServiceAsync.ExecuteScalarAsync<int>(

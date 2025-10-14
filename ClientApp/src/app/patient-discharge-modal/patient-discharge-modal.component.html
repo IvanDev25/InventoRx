@@ -1,0 +1,25 @@
+<div class="discharge-modal">
+  <div class="icon-container">
+    <div class="discharge-icon">
+      <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="40" cy="40" r="35" fill="#E8F5E8" stroke="#4CAF50" stroke-width="3"/>
+        <path d="M25 40L35 50L55 30" stroke="#4CAF50" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M40 15V25M40 55V65M25 40H15M55 40H65M30 30L35 25M50 55L45 50M30 50L35 55M50 25L45 30" stroke="#4CAF50" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+  </div>
+  
+  <h2 class="title">Discharge Patient</h2>
+  
+  <div class="message">
+    <p>Are you ready to discharge <strong>{{ data.patientName }}</strong>?</p>
+    <p>This will complete their treatment and remove them from the system.</p>
+  </div>
+  
+  <div class="button-container">
+    <button type="button" class="btn btn-cancel" (click)="onCancel()">Keep Patient</button>
+    <button type="button" class="btn btn-discharge" (click)="onDischarge()">Discharge</button>
+  </div>
+</div>
+
+

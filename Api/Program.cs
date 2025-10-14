@@ -70,6 +70,10 @@ builder.Services.AddScoped<ICustomTeamServiceAsync, CustomTeamServiceAsync>();
 builder.Services.AddScoped<ICustomManagerServiceAsync, CustomManagerServiceAsync>();
 builder.Services.AddScoped<ICustomCategoryServiceAsync, CustomCategoryServiceAsync>();
 builder.Services.AddScoped<ICustomAdminPermissionAsync, CustomAdminPermissionAsync>();
+builder.Services.AddScoped<ICustomPatientServiceAsync, CustomPatientServiceAsync>();
+builder.Services.AddScoped<ICustomMedicineSupplierServiceAsync, CustomMedicineSupplierServiceAsync>();
+builder.Services.AddScoped<ICustomMedicineServiceAsync, CustomMedicineServiceAsync>();
+builder.Services.AddScoped<ICustomAuditServiceAsync, CustomAuditServiceAsync>();
 builder.Services.AddScoped<IDapperServiceAsync, DapperServiceAsync>();
 
 //defining our IdentityCore Service

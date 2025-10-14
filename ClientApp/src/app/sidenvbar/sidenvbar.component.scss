@@ -14,7 +14,13 @@
 }
 
 ::ng-deep.material-icons{
-  color: black !important;
+  color: #7B2CBF !important;
+}
+
+.pharmacy-icon {
+  font-size: 48px !important;
+  color: #7B2CBF !important;
+  margin-bottom: 20px;
 }
 
 .left_div246_3995 {
@@ -156,14 +162,15 @@
 }
 
 .side-nav-lbl {
-  color: black;
+  color: #7B2CBF;
   font-family: 'Poppins';
-  font-size: 18;
+  font-size: 18px;
+  font-weight: 500;
   text-decoration: none !important;
 }
 
 .side-nav-anchor.active .side-nav-lbl {
-  color: black;
+  color: white;
 }
 
 
@@ -179,35 +186,29 @@
   display: flex;
   align-content: stretch;
   text-decoration: none !important;
-  //background-color: #00000026;
   height: 2.5rem;
   width: 230px;
   height: 50px;
   border-radius: 15px;
   justify-content: flex-start;
   align-items: center;
-  color: #737791;
+  color: #7B2CBF;
+  transition: all 0.3s ease;
 }
 .side-nav-anchor:hover{
-  background-color: rgba(0, 0, 0, 0.062);
+  background-color: rgba(123, 44, 191, 0.1);
 }
 
 .side-nav-anchor.active {
-  // background-color: #00A9FE;
+  background-color: #7B2CBF;
   position: relative;
   border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(123, 44, 191, 0.3);
 }
 
-/* Right border indicator */
+/* Remove the right border indicator */
 .side-nav-anchor.active::after {
-  content: '';
-  position: absolute;
-  right: 0;
-  top: 8px;
-  bottom: 8px;
-  width: 5px;
-  border-radius: 5px;
-  background-color: #00A9FE;
+  display: none;
 }
 
 
@@ -215,12 +216,12 @@
 
 
 .side-nav-icon {
-  color: black;
+  color: #7B2CBF;
   margin-left: 1rem;
 }
 
 .side-nav-anchor.active .side-nav-icon {
-  color: black !important;
+  color: white !important;
 }
 
 
