@@ -9,6 +9,7 @@ import { AccountService } from '../account/account.service';
 import { AuditService } from '../audit-log/audit-log.service';
 import { ToastService } from '../services/toast.service';
 import { take } from 'rxjs';
+import jsPDF from 'jspdf';
 
 @Component({
   selector: 'app-patient',
@@ -28,6 +29,9 @@ export class PatientComponent implements OnInit {
   totalPages: number = 1;
   pageSize: number = 10;
   totalItems: number = 0;
+  
+  // Track recently modified patients with timestamps
+  recentlyModifiedPatients: Map<number, number> = new Map();
 
 
   constructor(
@@ -46,9 +50,17 @@ export class PatientComponent implements OnInit {
   loadPatients(): void {
     this.patientService.getPatients().subscribe({
       next: (data) => {
-        this.patients = data;
-        this.filteredPatients = data; // Initially, no filter
-        this.flattenedData = this.flattenPatientData(data);
+        // Sort patients by recently modified timestamp (most recent first)
+        // Patients with recent modifications will be at the top
+        const sortedData = data.sort((a, b) => {
+          const aTime = this.recentlyModifiedPatients.get(a.id) || 0;
+          const bTime = this.recentlyModifiedPatients.get(b.id) || 0;
+          return bTime - aTime; // Most recent first
+        });
+        
+        this.patients = sortedData;
+        this.filteredPatients = sortedData; // Initially, no filter
+        this.flattenedData = this.flattenPatientData(sortedData);
         
         // Update pagination values based on patients, not medicine rows
         this.totalItems = this.filteredPatients.length; // Count patients, not medicine rows
@@ -62,8 +74,29 @@ export class PatientComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading patients:', error);
+        this.toastService.showError('Failed to load patient data. Please refresh the page.');
       }
     });
+  }
+
+  // Helper method to mark patient as recently modified and move to top
+  private updatePatientLastModified(patientId: number): void {
+    const currentTime = Date.now(); // Use timestamp for sorting
+    
+    // Mark as recently modified with current timestamp
+    this.recentlyModifiedPatients.set(patientId, currentTime);
+    
+    // Re-sort the patients array
+    this.patients.sort((a, b) => {
+      const aTime = this.recentlyModifiedPatients.get(a.id) || 0;
+      const bTime = this.recentlyModifiedPatients.get(b.id) || 0;
+      return bTime - aTime; // Most recent first
+    });
+    
+    // Update filtered patients and flattened data
+    this.filteredPatients = [...this.patients];
+    this.flattenedData = this.flattenPatientData(this.patients);
+    this.updatePaginatedData();
   }
 
   flattenPatientData(patients: any[]): any[] {
@@ -98,6 +131,7 @@ export class PatientComponent implements OnInit {
         
         flattened.push({
           patientName: patient.patientName,
+          patientId: patient.id, // Add patientId to the flattened data
           dateCreated: patient.dateCreated,
           isAdmitted: patient.isAdmitted,
           medicineName: patientMedicine.medicine.genericName,
@@ -178,7 +212,7 @@ export class PatientComponent implements OnInit {
       return;
     }
 
-    const patientId = row.originalData.patientId;
+    const patientId = row.patientId;
     const medicineId = row.originalData.medicine.id;
     const quantityChange = row.issuance;
   
@@ -206,8 +240,12 @@ export class PatientComponent implements OnInit {
 
         // Reset issuance input
         row.issuance = 0;
+        
+        // Mark patient as recently modified
+        this.updatePatientLastModified(patientId);
+        
+        // Reload all patient data to get updated quantities and stock
         this.loadPatients();
-        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error updating patient medicine quantity:', error);
@@ -242,7 +280,7 @@ export class PatientComponent implements OnInit {
       return;
     }
 
-    const patientId = row.originalData.patientId;
+    const patientId = row.patientId;
     const medicineId = row.originalData.medicine.id;
     const quantityChange = row.return;
   
@@ -271,8 +309,12 @@ export class PatientComponent implements OnInit {
         // Reset return input and hide the input
         row.return = 0;
         row.showReturnInput = false;
+        
+        // Mark patient as recently modified
+        this.updatePatientLastModified(patientId);
+        
+        // Reload all patient data to get updated quantities and stock
         this.loadPatients();
-        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error updating patient medicine quantity:', error);
@@ -303,12 +345,10 @@ export class PatientComponent implements OnInit {
   }
 
   editPatientMedicines(row: any): void {
-    console.log('Edit patient medicines:', row);
-    
     // Create patient data object with all necessary information
     const patientData = {
       patientName: row.patientName,
-      patientId: row.originalData.patientId,
+      patientId: row.patientId,
       dateCreated: row.dateCreated,
       isAdmitted: row.isAdmitted,
       originalData: row.originalData
@@ -323,7 +363,12 @@ export class PatientComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         console.log('Patient medicine assignments updated:', result);
-        this.loadPatients(); // Reload the patient data
+        
+        // Update patient lastModified timestamp and move to top
+        this.updatePatientLastModified(patientData.patientId);
+        
+        // Reload all patient data to show updated medicine assignments
+        this.loadPatients();
       }
     });
   }
@@ -520,6 +565,10 @@ export class PatientComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         console.log('Patient added:', result);
+        // Mark the new patient as recently modified
+        if (result.patientId) {
+          this.recentlyModifiedPatients.set(result.patientId, Date.now());
+        }
         this.loadPatients();
       }
     });
@@ -545,6 +594,128 @@ export class PatientComponent implements OnInit {
     this.currentPage = page;
     this.updatePaginatedData();
     console.log('Page changed to:', page);
+  }
+
+  downloadPatientPDF(row: any): void {
+    try {
+      // Create new PDF document
+      const doc = new jsPDF();
+      
+      // Get current date for the report
+      const currentDate = new Date().toLocaleDateString();
+      
+      // Set up fonts and colors
+      doc.setFontSize(20);
+      doc.setTextColor(40, 40, 40);
+      
+      // Add title
+      doc.text('Patient Medicine Report', 20, 30);
+      
+      // Add patient information
+      doc.setFontSize(14);
+      doc.setTextColor(60, 60, 60);
+      doc.text(`Patient Name: ${row.patientName}`, 20, 50);
+      doc.text(`Report Date: ${currentDate}`, 20, 60);
+      doc.text(`Status: ${row.isAdmitted ? 'Admitted' : 'Not Admitted'}`, 20, 70);
+      
+      // Add line separator
+      doc.setDrawColor(200, 200, 200);
+      doc.line(20, 80, 190, 80);
+      
+      // Get all medicines for this patient
+      const patientMedicines = this.flattenedData.filter(item => item.patientId === row.patientId);
+      
+      if (patientMedicines.length > 0) {
+        // Add table headers
+        doc.setFontSize(12);
+        doc.setTextColor(40, 40, 40);
+        doc.setFont('helvetica', 'bold');
+        
+        let yPosition = 95;
+        doc.text('Medicine Name', 20, yPosition);
+        doc.text('Consignor', 70, yPosition);
+        doc.text('Stock', 110, yPosition);
+        doc.text('Qty', 130, yPosition);
+        doc.text('Price', 150, yPosition);
+        doc.text('Total', 170, yPosition);
+        
+        // Add line under headers
+        doc.line(20, yPosition + 5, 190, yPosition + 5);
+        
+        // Add medicine data
+        doc.setFont('helvetica', 'normal');
+        yPosition = 110;
+        
+        patientMedicines.forEach((medicine, index) => {
+          if (yPosition > 270) { // Check if we need a new page
+            doc.addPage();
+            yPosition = 30;
+          }
+          
+          doc.text(medicine.medicineName, 20, yPosition);
+          doc.text(medicine.supplierName, 70, yPosition);
+          doc.text(medicine.stock.toString(), 110, yPosition);
+          doc.text(medicine.quantity.toString(), 130, yPosition);
+          doc.text(`₱${medicine.price.toFixed(2)}`, 150, yPosition);
+          doc.text(`₱${medicine.priceTotal.toFixed(2)}`, 170, yPosition);
+          
+          yPosition += 10;
+        });
+        
+        // Add totals section
+        yPosition += 10;
+        doc.setFont('helvetica', 'bold');
+        doc.text('TOTALS:', 20, yPosition);
+        
+        if (row.nonRegularConsignerTotal > 0) {
+          yPosition += 10;
+          doc.text(`Consignor Total: ₱${row.nonRegularConsignerTotal.toFixed(2)}`, 30, yPosition);
+        }
+        
+        if (row.regularConsignerTotal > 0) {
+          yPosition += 10;
+          doc.text(`REGULAR Total: ₱${row.regularConsignerTotal.toFixed(2)}`, 30, yPosition);
+        }
+        
+        yPosition += 10;
+        doc.text(`Grand Total: ₱${row.patientTotal.toFixed(2)}`, 30, yPosition);
+      } else {
+        doc.setFontSize(12);
+        doc.text('No medicines assigned to this patient.', 20, 95);
+      }
+      
+      // Add footer
+      doc.setFontSize(8);
+      doc.setTextColor(150, 150, 150);
+      doc.text('Generated by InventoRx System', 20, 285);
+      
+      // Save the PDF
+      const fileName = `Patient_Report_${row.patientName.replace(/\s+/g, '_')}_${currentDate.replace(/\//g, '-')}.pdf`;
+      doc.save(fileName);
+      
+      // Show success message
+      this.toastService.showSuccess('Patient report downloaded successfully!');
+      
+      // Log audit
+      this.accountService.user$.pipe(take(1)).subscribe(user => {
+        if (user) {
+          const auditData = this.auditService.createAuditData(
+            user.firstName, 
+            'downloaded patient PDF report', 
+            row.patientName
+          );
+          
+          this.auditService.postAudit(auditData).subscribe({
+            next: () => console.log('Audit logged successfully'),
+            error: (error) => console.error('Failed to log audit:', error)
+          });
+        }
+      });
+      
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      this.toastService.showError('Failed to generate PDF report. Please try again.');
+    }
   }
 
 }

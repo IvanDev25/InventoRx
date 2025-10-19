@@ -46,7 +46,6 @@ export class PatientEditModalComponent {
 
   ngOnInit(): void {
     this.loadMedicines();
-    this.loadAssignedMedicines();
   }
 
   // ✅ Load medicine list
@@ -59,6 +58,9 @@ export class PatientEditModalComponent {
         }));
         this.filteredMedicines = [...this.medicines];
         this.cdr.detectChanges();
+        
+        // Load assigned medicines after medicines are loaded
+        this.loadAssignedMedicines();
       },
       error: (error) => {
         console.error('Error loading medicines:', error);
@@ -70,13 +72,16 @@ export class PatientEditModalComponent {
   loadAssignedMedicines(): void {
     this.patientAddService.getAssignedMedicines(this.patientData.patientId).subscribe({
       next: (medicines) => {
+        console.log('Loaded assigned medicines for patient:', this.patientData.patientId, medicines);
         this.originalAssignedMedicines = [...medicines]; // Store original for comparison
         // Mark assigned medicines as selected
         this.selectedMedicines = [...medicines];
         this.updateMedicineSelection();
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error loading assigned medicines:', error);
+        Swal.fire('Error', 'Failed to load assigned medicines.', 'error');
       }
     });
   }
@@ -87,6 +92,7 @@ export class PatientEditModalComponent {
       medicine.selected = this.selectedMedicines.some(selected => selected.id === medicine.id);
     });
     this.filteredMedicines = [...this.medicines];
+    console.log('Updated medicine selection:', this.selectedMedicines.length, 'selected medicines');
   }
 
   onSearchInputChange(): void {

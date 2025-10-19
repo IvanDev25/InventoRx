@@ -207,6 +207,13 @@
                   </svg>
                   </mat-icon>
               </button>
+              
+              <!-- PDF Download Button -->
+              <button mat-icon-button color="accent" class="pdf-download-btn" (click)="downloadPatientPDF(row)" title="Download Patient Report">
+                <mat-icon><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M3 17V3C3 2.45 3.19567 1.97933 3.587 1.588C3.97833 1.19667 4.44933 1.00067 5 1H15C15.55 1 16.021 1.19567 16.413 1.587C16.805 1.97833 17.0007 2.44933 17 3V17C17 17.55 16.8043 18.021 16.413 18.413C16.0217 18.805 15.5507 19.0007 15 19H5C4.45 19 3.97933 18.8043 3.588 18.413C3.19667 18.0217 3.00067 17.5507 3 17ZM5 3V17H15V3H5ZM7 5H13V7H7V5ZM7 9H13V11H7V9ZM7 13H10V15H7V13Z" fill="#41454A"/>
+                </svg></mat-icon>
+              </button>
               <!-- Show different button based on admission status -->
               <button mat-icon-button 
                       [color]="row.isAdmitted ? 'primary' : 'warn'" 

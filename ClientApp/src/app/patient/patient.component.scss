@@ -384,6 +384,28 @@
     flex-wrap: wrap;
   }
 
+  // PDF Download Button Styling
+  .pdf-download-btn {
+    transition: all 0.2s ease;
+    
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    }
+    
+    &:active {
+      transform: translateY(0);
+    }
+    
+    mat-icon {
+      transition: color 0.2s ease;
+    }
+    
+    &:hover mat-icon {
+      color: #007bff !important;
+    }
+  }
+
   .refill-button-container {
     position: relative;
     display: inline-block;
