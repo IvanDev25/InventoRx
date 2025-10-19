@@ -1,0 +1,59 @@
+services:
+  # SQL Server Database
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: inventorx-sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Blast123
+      - MSSQL_PID=Express
+      - MSSQL_TCP_PORT=1433
+      - MSSQL_AGENT_ENABLED=true
+      - MSSQL_ENABLE_HADR=0
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    networks:
+      - inventorx-network
+
+  # .NET API
+  api:
+    build:
+      context: .
+      dockerfile: Api/Dockerfile
+    container_name: inventorx-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=BoracayPharmacy;User Id=sa;Password=Blast123;TrustServerCertificate=true;MultipleActiveResultSets=true;
+      - JWT__Key=E7YkSW0c6rzWRAw0Lsl8Q3adEkrJlGwhA6u9o+o5DLF2fPZ1DKDDWmDcV8vJwYs7W+MW2RZ4cVQ4BweY4zxTuST2ZK/d9WED+H2j+gT1k2gJ30r5WhCA2eC+kX9nOoL1hYkWVzcGVjaWFsIGtleSB3aXRob3V0IG5vdCBiZSBiZW5lZml0Lg==
+      - JWT__Issuer=http://localhost:5000
+    ports:
+      - "5000:80"
+    depends_on:
+      - sqlserver
+    networks:
+      - inventorx-network
+    restart: unless-stopped
+
+  # Angular Frontend
+  client:
+    build:
+      context: ./ClientApp
+      dockerfile: Dockerfile
+    container_name: inventorx-client
+    ports:
+      - "4200:80"
+    depends_on:
+      - api
+    networks:
+      - inventorx-network
+    restart: unless-stopped
+
+volumes:
+  sqlserver_data:
+
+networks:
+  inventorx-network:
+    driver: bridge
