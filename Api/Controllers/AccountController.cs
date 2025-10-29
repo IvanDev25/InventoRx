@@ -68,39 +68,68 @@ namespace Api.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDto model)
         {
-            if (await CheckEmailExistsAsync(model.Email))
-            {
-                return BadRequest($"An existing account is using {model.Email}, email address. Please try another email address");
-            }
-
-            var userToAdd = new User
-            {
-                FirstName = model.FirstName.ToLower(),
-                LastName = model.LastName.ToLower(),
-                UserName = model.Email.ToLower(),
-                Email = model.Email.ToLower(),
-            };
-
-            var result = await _userManager.CreateAsync(userToAdd, model.Password);
-            if (!result.Succeeded) return BadRequest(result.Errors);
-
             try
             {
-                if (await SendConfirmEmailAsync(userToAdd))
+                if (model == null)
                 {
+                    return BadRequest("Invalid registration data");
+                }
+
+                if (await CheckEmailExistsAsync(model.Email))
+                {
+                    return BadRequest($"An existing account is using {model.Email}, email address. Please try another email address");
+                }
+
+                var userToAdd = new User
+                {
+                    FirstName = model.FirstName.ToLower(),
+                    LastName = model.LastName.ToLower(),
+                    UserName = model.Email.ToLower(),
+                    Email = model.Email.ToLower(),
+                };
+
+                var result = await _userManager.CreateAsync(userToAdd, model.Password);
+                if (!result.Succeeded) 
+                {
+                    return BadRequest(new { 
+                        message = "Failed to create user",
+                        errors = result.Errors.Select(e => e.Description).ToList()
+                    });
+                }
+
+                try
+                {
+                    if (await SendConfirmEmailAsync(userToAdd))
+                    {
+                        return Ok(new
+                        {
+                            id = userToAdd.Id,
+                            title = "Account Created",
+                            message = "Your account has been created, Please confirm your email address"
+                        });
+                    }
+
+                    return BadRequest("Failed to send email. Please contact admin");
+                }
+                catch (Exception emailEx)
+                {
+                    // Log email error but don't fail - user is created
                     return Ok(new
                     {
                         id = userToAdd.Id,
                         title = "Account Created",
-                        message = "Your account has been created, Please confirm your email address"
+                        message = "Your account has been created, but we couldn't send the confirmation email. Please contact admin."
                     });
                 }
-
-                return BadRequest("Failed to send email. Please contact admin");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return BadRequest("Failed to send email. Please contact admin");
+                // Log the full exception for debugging
+                return StatusCode(500, new { 
+                    message = "An error occurred during registration", 
+                    error = ex.Message,
+                    innerException = ex.InnerException?.Message
+                });
             }
         }
 
