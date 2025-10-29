@@ -12,6 +12,7 @@ using Pomelo.EntityFrameworkCore.MySql;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Linq;
@@ -139,7 +140,11 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularApp", policy =>
     {
-        policy.WithOrigins("https://localhost:4200", "http://localhost:4200")
+        policy.WithOrigins(
+                "https://localhost:4200", 
+                "http://localhost:4200",
+                "https://your-angular-app.onrender.com" // Replace with your frontend Render URL
+              )
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
@@ -147,6 +152,22 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+// Apply database migrations automatically on startup
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<Context>();
+        context.Database.Migrate();
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred while migrating the database.");
+    }
+}
 
 app.UseCors("AllowAngularApp");
 
