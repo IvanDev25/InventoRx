@@ -1,5 +1,5 @@
 export const environment = {
     production: false,
-    appUrl: 'https://localhost:7261',
+    appUrl: 'https://inventorx.onrender.com',
     userKey: 'identityAppUser'
 };

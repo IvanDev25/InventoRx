@@ -42,8 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\Migrations\" />
-    <Folder Include="Migrations\" />
+    <None Include="Data\Migrations\**\*" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,20 @@
+# ============================================
+# RENDER ENVIRONMENT VARIABLES FOR .NET API
+# ============================================
+# Copy and paste these into Render's "Add from .env" dialog
+# Replace YOUR_RENDER_API_URL and YOUR_FRONTEND_URL with actual values
+# ============================================
+
+ConnectionStrings__DefaultConnection=Server=hopper.proxy.rlwy.net;Port=20007;Database=InventoRxDb;User Id=root;Password=FPcKnjlHszOpOuNYIdHkpETVJatAAaKn;
+JWT__Key=E7YkSW0c6rzWRAw0Lsl8Q3adEkrJlGwhA6u9o+o5DLF2fPZ1DKDDWmDcV8vJwYs7W+MW2RZ4cVQ4BweY4zxTuST2ZK/d9WED+H2j+gT1k2gJ30r5WhCA2eC+kX9nOoL1hYkWVzcGVjaWFsIGtleSB3aXRob3V0IG5vdCBiZSBiZW5lZml0Lg==
+JWT__Issuer=YOUR_RENDER_API_URL
+JWT__ClientUrl=YOUR_FRONTEND_URL
+JWT__ExpiresInDays=7
+Email__From=ivanjoshuamerete25@gmail.com
+Email__ApplicationName=LoveBoracay
+Email__ConfirmEmailPath=account/confirm-email
+Email__ResetPasswordPath=account/reset-password
+MailJet__ApiKey=49a67eb1af48e81ab8ce9b3fbd2bf532
+MailJet__SecretKey=f8d6d09d05cf40395b01629dd4da42a9
+ASPNETCORE_ENVIRONMENT=Production
+

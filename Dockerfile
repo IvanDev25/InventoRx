@@ -44,8 +44,8 @@ ENV ASPNETCORE_URLS=http://+:80
 # Switch back to app directory
 WORKDIR /app
 
-# Create startup script to run migrations and start API
-RUN echo '#!/bin/sh\nset -e\ncd /src/Api\necho "Running database migrations..."\ndotnet ef database update --verbose || echo "Migration failed, but continuing..."\ncd /app\necho "Starting API..."\ndotnet Api.dll' > /app/start.sh && chmod +x /app/start.sh
+# Create startup script to start API (migrations now handled in Program.cs)
+RUN echo '#!/bin/sh\necho "Starting API (migrations run automatically in Program.cs)..."\ndotnet Api.dll' > /app/start.sh && chmod +x /app/start.sh
 
 ENTRYPOINT ["/app/start.sh"]
 

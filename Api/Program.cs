@@ -140,11 +140,18 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularApp", policy =>
     {
-        policy.WithOrigins(
-                "https://localhost:4200", 
-                "http://localhost:4200",
-                "https://your-angular-app.onrender.com" // Replace with your frontend Render URL
-              )
+        policy.SetIsOriginAllowed(origin =>
+        {
+            // Allow localhost for development
+            if (origin.Contains("localhost") || origin.Contains("127.0.0.1"))
+                return true;
+            
+            // Allow Netlify domains
+            if (origin.Contains("netlify.app"))
+                return true;
+            
+            return false;
+        })
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
@@ -157,15 +164,38 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
+    var logger = services.GetRequiredService<ILogger<Program>>();
     try
     {
         var context = services.GetRequiredService<Context>();
-        context.Database.Migrate();
+        
+        logger.LogInformation("Checking for pending migrations...");
+        var pendingMigrations = context.Database.GetPendingMigrations().ToList();
+        
+        if (pendingMigrations.Any())
+        {
+            logger.LogInformation($"Found {pendingMigrations.Count} pending migration(s): {string.Join(", ", pendingMigrations)}");
+            logger.LogInformation("Applying migrations...");
+            context.Database.Migrate();
+            logger.LogInformation("Migrations applied successfully!");
+        }
+        else
+        {
+            logger.LogInformation("Database is up to date. No pending migrations.");
+        }
+        
+        // Ensure database is created if it doesn't exist
+        if (!context.Database.CanConnect())
+        {
+            logger.LogInformation("Database does not exist. Creating database...");
+            context.Database.EnsureCreated();
+        }
     }
     catch (Exception ex)
     {
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "An error occurred while migrating the database.");
+        logger.LogError(ex, "An error occurred while migrating the database: {Message}", ex.Message);
+        logger.LogError("Stack trace: {StackTrace}", ex.StackTrace);
+        // Don't fail the application, but log the error
     }
 }
 
