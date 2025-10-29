@@ -15,6 +15,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -176,15 +177,88 @@ using (var scope = app.Services.CreateScope())
             throw new InvalidOperationException("Cannot connect to the database.");
         }
         
-        logger.LogInformation("Checking for pending migrations...");
-        var pendingMigrations = context.Database.GetPendingMigrations().ToList();
+        logger.LogInformation("Checking migration status...");
         
-        if (pendingMigrations.Any())
+        // Get all migrations
+        var allMigrations = context.Database.GetMigrations().ToList();
+        logger.LogInformation($"Total migrations defined: {allMigrations.Count}");
+        
+        // Get applied migrations
+        var appliedMigrations = context.Database.GetAppliedMigrations().ToList();
+        logger.LogInformation($"Applied migrations: {appliedMigrations.Count} - {string.Join(", ", appliedMigrations)}");
+        
+        // Check if critical tables exist (in case migration was marked as applied but failed)
+        var criticalTables = new[] { "aspnetusers", "medicines", "medicinesuppliers", "patients" };
+        var missingTables = new List<string>();
+        
+        try
         {
+            var connection = context.Database.GetDbConnection();
+            if (connection.State != System.Data.ConnectionState.Open)
+            {
+                connection.Open();
+            }
+            
+            foreach (var tableName in criticalTables)
+            {
+                try
+                {
+                    using var command = connection.CreateCommand();
+                    command.CommandText = $"SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = DATABASE() AND LOWER(table_name) = '{tableName}'";
+                    var count = Convert.ToInt32(command.ExecuteScalar());
+                    
+                    if (count == 0)
+                    {
+                        missingTables.Add(tableName);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    logger.LogWarning($"Could not check if table {tableName} exists: {ex.Message}");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning($"Could not check table existence: {ex.Message}");
+        }
+        
+        if (missingTables.Any())
+        {
+            logger.LogWarning($"Found {missingTables.Count} missing critical table(s): {string.Join(", ", missingTables)}");
+            logger.LogWarning("Migration may have been marked as applied but failed. Attempting to re-apply...");
+        }
+        
+        // Get pending migrations
+        var pendingMigrations = context.Database.GetPendingMigrations().ToList();
+        logger.LogInformation($"Pending migrations: {pendingMigrations.Count}");
+        
+        if (pendingMigrations.Any() || missingTables.Any())
+        {
+            if (missingTables.Any() && !pendingMigrations.Any())
+            {
+                logger.LogWarning("Tables are missing but no pending migrations. This suggests a failed migration.");
+                logger.LogWarning("You may need to manually delete the __EFMigrationsHistory entry and re-run migrations.");
+            }
+            
             logger.LogInformation($"Found {pendingMigrations.Count} pending migration(s): {string.Join(", ", pendingMigrations)}");
             logger.LogInformation("Applying migrations...");
-            context.Database.Migrate();
-            logger.LogInformation("Migrations applied successfully!");
+            
+            try
+            {
+                context.Database.Migrate();
+                logger.LogInformation("Migrations applied successfully!");
+            }
+            catch (Exception migrateEx)
+            {
+                logger.LogError(migrateEx, "Error during migration execution: {Message}", migrateEx.Message);
+                if (migrateEx.InnerException != null)
+                {
+                    logger.LogError("Inner exception: {Message}", migrateEx.InnerException.Message);
+                    logger.LogError("Inner stack trace: {StackTrace}", migrateEx.InnerException.StackTrace);
+                }
+                throw; // Re-throw to be caught by outer catch
+            }
         }
         else
         {
@@ -195,6 +269,11 @@ using (var scope = app.Services.CreateScope())
     {
         logger.LogError(ex, "An error occurred while migrating the database: {Message}", ex.Message);
         logger.LogError("Stack trace: {StackTrace}", ex.StackTrace);
+        if (ex.InnerException != null)
+        {
+            logger.LogError("Inner exception: {Message}", ex.InnerException.Message);
+            logger.LogError("Inner stack trace: {StackTrace}", ex.InnerException.StackTrace);
+        }
         // Don't fail the application, but log the error
     }
 }
