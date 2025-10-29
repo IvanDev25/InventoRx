@@ -27,7 +27,7 @@ namespace Api.Services
 
             var insertQuery = @"
                 INSERT INTO Medicines 
-                (GenericName, Issuance, Price, Stock, ExpirationDate, [Return], Refill, MedicineSupplierId)
+                (GenericName, Issuance, Price, Stock, ExpirationDate, `Return`, Refill, MedicineSupplierId)
                 VALUES (@GenericName, @Issuance, @Price, @Stock, @ExpirationDate, @Return, @Refill, @MedicineSupplierId)";
 
             try
@@ -67,7 +67,7 @@ namespace Api.Services
 
             var insertQuery = @"
                 INSERT INTO Medicines 
-                (GenericName, Issuance, Price, Stock, ExpirationDate, [Return], MedicineSupplierId)
+                (GenericName, Issuance, Price, Stock, ExpirationDate, `Return`, MedicineSupplierId)
                 VALUES (@GenericName, @Issuance, @Price, @Stock, @ExpirationDate, @Return, @MedicineSupplierId)";
 
             try
@@ -104,7 +104,7 @@ namespace Api.Services
             try
             {
                 string query = @"
-                    SELECT m.Id, m.GenericName, m.Issuance, m.Price, m.Stock, m.ExpirationDate, m.[Return], m.Refill, m.MedicineSupplierId,
+                    SELECT m.Id, m.GenericName, m.Issuance, m.Price, m.Stock, m.ExpirationDate, m.`Return`, m.Refill, m.MedicineSupplierId,
                            ms.Id as MedicineSupplier_Id, ms.SupplierName as MedicineSupplier_SupplierName
                     FROM Medicines m
                     LEFT JOIN MedicineSuppliers ms ON m.MedicineSupplierId = ms.Id
@@ -155,7 +155,7 @@ namespace Api.Services
             try
             {
                 string query = @"
-                    SELECT m.Id, m.GenericName, m.Issuance, m.Price, m.Stock, m.ExpirationDate, m.[Return], m.Refill, m.MedicineSupplierId,
+                    SELECT m.Id, m.GenericName, m.Issuance, m.Price, m.Stock, m.ExpirationDate, m.`Return`, m.Refill, m.MedicineSupplierId,
                            ms.Id as MedicineSupplier_Id, ms.SupplierName as MedicineSupplier_SupplierName
                     FROM Medicines m
                     LEFT JOIN MedicineSuppliers ms ON m.MedicineSupplierId = ms.Id";
@@ -219,7 +219,7 @@ namespace Api.Services
                         Price = @Price, 
                         Stock = @Stock, 
                         ExpirationDate = @ExpirationDate, 
-                        [Return] = 0,
+                        `Return` = 0,
                         Issuance = 0,
                         MedicineSupplierId = @MedicineSupplierId
                     WHERE Id = @Id";
@@ -263,7 +263,7 @@ namespace Api.Services
                         Stock = @Stock, 
                         Price = @Price, 
                         ExpirationDate = @ExpirationDate, 
-                        [Return] = 0, 
+                        `Return` = 0, 
                         Issuance = 0,
                         MedicineSupplierId = @MedicineSupplierId
                     WHERE Id = @Id";

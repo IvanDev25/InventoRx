@@ -77,7 +77,7 @@ namespace Api.Services
 
                 // Get all medicines belonging to this supplier
                 string medicinesQuery = @"
-                    SELECT Id, GenericName, Issuance, Price, Stock, ExpirationDate, [Return], MedicineSupplierId
+                    SELECT Id, GenericName, Issuance, Price, Stock, ExpirationDate, `Return`, MedicineSupplierId
                     FROM Medicines
                     WHERE MedicineSupplierId = @SupplierId";
 
@@ -121,7 +121,7 @@ namespace Api.Services
                 foreach (var supplier in suppliers)
                 {
                     string medicinesQuery = @"
-                        SELECT Id, GenericName, Issuance, Price, Stock, ExpirationDate, [Return], MedicineSupplierId
+                        SELECT Id, GenericName, Issuance, Price, Stock, ExpirationDate, `Return`, MedicineSupplierId
                         FROM Medicines
                         WHERE MedicineSupplierId = @SupplierId";
 

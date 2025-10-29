@@ -105,7 +105,7 @@ namespace Api.Services
                     foreach (var pm in patientMedicines)
                     {
                         string medicineQuery = @"
-                            SELECT m.Id, m.GenericName, m.Issuance, m.Price, m.Stock, m.ExpirationDate, m.[Return], m.Refill, m.MedicineSupplierId,
+                            SELECT m.Id, m.GenericName, m.Issuance, m.Price, m.Stock, m.ExpirationDate, m.`Return`, m.Refill, m.MedicineSupplierId,
                                    ms.Id as MedicineSupplier_Id, ms.SupplierName as MedicineSupplier_SupplierName
                             FROM Medicines m
                             LEFT JOIN MedicineSuppliers ms ON m.MedicineSupplierId = ms.Id
@@ -196,7 +196,7 @@ namespace Api.Services
                     foreach (var pm in patientMedicines)
                     {
                         string medicineQuery = @"
-                            SELECT m.Id, m.GenericName, m.Issuance, m.Price, m.Stock, m.ExpirationDate, m.[Return], m.Refill, m.MedicineSupplierId,
+                            SELECT m.Id, m.GenericName, m.Issuance, m.Price, m.Stock, m.ExpirationDate, m.`Return`, m.Refill, m.MedicineSupplierId,
                                    ms.Id as MedicineSupplier_Id, ms.SupplierName as MedicineSupplier_SupplierName
                             FROM Medicines m
                             LEFT JOIN MedicineSuppliers ms ON m.MedicineSupplierId = ms.Id
@@ -487,7 +487,7 @@ namespace Api.Services
                 }
 
                 string query = @"
-                    SELECT m.Id, m.GenericName, m.Issuance, m.Price, m.Stock, m.ExpirationDate, m.[Return], m.Refill, m.MedicineSupplierId,
+                    SELECT m.Id, m.GenericName, m.Issuance, m.Price, m.Stock, m.ExpirationDate, m.`Return`, m.Refill, m.MedicineSupplierId,
                            ms.Id as MedicineSupplier_Id, ms.SupplierName as MedicineSupplier_SupplierName
                     FROM Medicines m
                     INNER JOIN PatientMedicines pm ON m.Id = pm.MedicineId
@@ -524,7 +524,7 @@ namespace Api.Services
                 }
 
                 string query = @"
-                    SELECT m.Id, m.GenericName, m.Issuance, m.Price, m.Stock, m.ExpirationDate, m.[Return], m.Refill, m.MedicineSupplierId,
+                    SELECT m.Id, m.GenericName, m.Issuance, m.Price, m.Stock, m.ExpirationDate, m.`Return`, m.Refill, m.MedicineSupplierId,
                            ms.Id as MedicineSupplier_Id, ms.SupplierName as MedicineSupplier_SupplierName
                     FROM Medicines m
                     LEFT JOIN MedicineSuppliers ms ON m.MedicineSupplierId = ms.Id
