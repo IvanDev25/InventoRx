@@ -169,6 +169,13 @@ using (var scope = app.Services.CreateScope())
     {
         var context = services.GetRequiredService<Context>();
         
+        // Check if we can connect to the database
+        if (!context.Database.CanConnect())
+        {
+            logger.LogError("Cannot connect to the database. Please check your connection string.");
+            throw new InvalidOperationException("Cannot connect to the database.");
+        }
+        
         logger.LogInformation("Checking for pending migrations...");
         var pendingMigrations = context.Database.GetPendingMigrations().ToList();
         
@@ -182,13 +189,6 @@ using (var scope = app.Services.CreateScope())
         else
         {
             logger.LogInformation("Database is up to date. No pending migrations.");
-        }
-        
-        // Ensure database is created if it doesn't exist
-        if (!context.Database.CanConnect())
-        {
-            logger.LogInformation("Database does not exist. Creating database...");
-            context.Database.EnsureCreated();
         }
     }
     catch (Exception ex)
