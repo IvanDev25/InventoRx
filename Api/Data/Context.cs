@@ -33,6 +33,16 @@ namespace Api.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            // Configure all tables to use lowercase names (MySQL on Linux requirement)
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                var tableName = entityType.GetTableName();
+                if (tableName != null)
+                {
+                    entityType.SetTableName(tableName.ToLowerInvariant());
+                }
+            }
+
             // Configure Medicine ↔ MedicineSupplier relationship
             modelBuilder.Entity<Medicine>()
                 .HasOne(m => m.MedicineSupplier)
