@@ -188,7 +188,8 @@ using (var scope = app.Services.CreateScope())
         logger.LogInformation($"Applied migrations: {appliedMigrations.Count} - {string.Join(", ", appliedMigrations)}");
         
         // Check if critical tables exist (in case migration was marked as applied but failed)
-        var criticalTables = new[] { "aspnetusers", "medicines", "medicinesuppliers", "patients" };
+        // Note: Tables are stored with PascalCase names (AspNetUsers, Medicines, etc.)
+        var criticalTables = new[] { "AspNetUsers", "Medicines", "MedicineSuppliers", "Patients" };
         var missingTables = new List<string>();
         
         try
@@ -204,7 +205,8 @@ using (var scope = app.Services.CreateScope())
                 try
                 {
                     using var command = connection.CreateCommand();
-                    command.CommandText = $"SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = DATABASE() AND LOWER(table_name) = '{tableName}'";
+                    // Tables are stored with PascalCase, so we match exactly
+                    command.CommandText = $"SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = '{tableName}'";
                     var count = Convert.ToInt32(command.ExecuteScalar());
                     
                     if (count == 0)
