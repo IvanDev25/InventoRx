@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { take } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 import { User } from 'src/app/shared/models/account/user';
 import { SharedService } from 'src/app/shared/shared.service';
 import { AccountService } from '../account.service';
@@ -16,6 +17,7 @@ export class LoginComponent implements OnInit{
   submitted = false;
   errorMessages: string[] = [];
   returnUrl: string | null = null;
+  isLoading: boolean = false;
 
   constructor(private accountService:AccountService,
     private formBuilder:FormBuilder,
@@ -53,7 +55,10 @@ export class LoginComponent implements OnInit{
         this.errorMessages = [];
 
         if (this.loginForm.valid) {
-          this.accountService.login(this.loginForm.value).subscribe({
+          this.isLoading = true;
+          this.accountService.login(this.loginForm.value)
+            .pipe(finalize(() => { this.isLoading = false; }))
+            .subscribe({
             next: (response: any) => {
               if (this.returnUrl) {
                 this.router.navigateByUrl(this.returnUrl);

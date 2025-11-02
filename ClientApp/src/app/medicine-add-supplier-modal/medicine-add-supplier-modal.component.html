@@ -1,5 +1,11 @@
 <!-- medicine-add-supplier-modal.component.html -->
-<div class="container">
+<div class="container" [class.loading-mode]="isLoading">
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" *ngIf="isLoading">
+      <div class="loading-spinner"></div>
+      <p class="loading-text">Adding supplier, please wait...</p>
+    </div>
+
     <div class="header">
       <div class="header-content">
         <div class="supplier-icon">
@@ -9,7 +15,7 @@
         </div>
         <h1>Add Supplier</h1>
       </div>
-      <button type="button" class="close-btn" (click)="close()">
+      <button type="button" class="close-btn" (click)="close()" [disabled]="isLoading">
         <span>&times;</span>
       </button>
     </div>
@@ -23,17 +29,19 @@
             id="supplierName"
             formControlName="supplierName"
             placeholder="Enter supplier name"
+            [disabled]="isLoading"
           />
         </div>
   
         <div class="button-container">
           <button type="submit" class="btn btn-add" [disabled]="isLoading">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" *ngIf="!isLoading">
               <path d="M6 1V11M1 6H11" stroke="white" stroke-width="2" stroke-linecap="round"/>
             </svg>
-            {{ isLoading ? 'Saving...' : 'Add' }}
+            <span *ngIf="isLoading" class="spinner"></span>
+            {{ isLoading ? 'Adding...' : 'Add' }}
           </button>
-          <button type="button" class="btn btn-cancel" (click)="close()">Cancel</button>
+          <button type="button" class="btn btn-cancel" (click)="close()" [disabled]="isLoading">Cancel</button>
         </div>
       </form>
     </div>

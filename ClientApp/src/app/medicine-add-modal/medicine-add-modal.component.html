@@ -1,4 +1,10 @@
-<div class="container">
+<div class="container" [class.loading-mode]="isLoading">
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" *ngIf="isLoading">
+      <div class="loading-spinner"></div>
+      <p class="loading-text">Adding medicine, please wait...</p>
+    </div>
+
     <div class="header">
       <div class="header-content">
         <div class="pill-icon">
@@ -8,7 +14,7 @@
         </div>
         <h1>Add Medicine</h1>
       </div>
-      <button type="button" class="close-btn" (click)="onClose()">
+      <button type="button" class="close-btn" (click)="onClose()" [disabled]="isLoading">
         <span>&times;</span>
       </button>
     </div>
@@ -25,6 +31,7 @@
             placeholder="Enter Generic Name"
             [(ngModel)]="medicineData.genericName"
             name="genericName"
+            [disabled]="isLoading"
             required
           />
         </div>
@@ -38,6 +45,7 @@
             placeholder="Enter Price"
             [(ngModel)]="medicineData.price"
             name="price"
+            [disabled]="isLoading"
             required
           />
         </div>
@@ -50,6 +58,7 @@
             id="expirationDate"
             [(ngModel)]="medicineData.expirationDate"
             name="expirationDate"
+            [disabled]="isLoading"
             required
           />
         </div>
@@ -63,6 +72,7 @@
             placeholder="Enter Stock"
             [(ngModel)]="medicineData.stock"
             name="stock"
+            [disabled]="isLoading"
             required
           />
         </div>
@@ -73,7 +83,7 @@
 
           <div style="display: flex; flex-direction: row; width: 100%; align-items: center; gap: 8px;">
             <div class="consignor-input-wrapper">
-              <select id="consignor" [(ngModel)]="selectedSupplierId" name="consignor" (change)="medicineData.medicineSupplierId = selectedSupplierId">
+              <select id="consignor" [(ngModel)]="selectedSupplierId" name="consignor" (change)="medicineData.medicineSupplierId = selectedSupplierId" [disabled]="isLoading">
                 <option value="" disabled selected>Enter Consignor</option>
                 <option *ngFor="let supplier of suppliers" [value]="supplier.id">
                   {{ supplier.supplierName }}
@@ -81,7 +91,7 @@
               </select>
             </div>
             <div>
-              <button type="button" class="btn btn-add-small" (click)="openAddSupplierDialog()">
+              <button type="button" class="btn btn-add-small" (click)="openAddSupplierDialog()" [disabled]="isLoading">
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M6 1V11M1 6H11" stroke="white" stroke-width="2" stroke-linecap="round"/>
                 </svg>
@@ -94,13 +104,14 @@
         </div>
   
         <div class="button-container">
-          <button type="submit" class="btn btn-add">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <button type="submit" class="btn btn-add" [disabled]="isLoading">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" *ngIf="!isLoading">
               <path d="M6 1V11M1 6H11" stroke="white" stroke-width="2" stroke-linecap="round"/>
             </svg>
-            Add
+            <span *ngIf="isLoading" class="spinner"></span>
+            {{ isLoading ? 'Adding...' : 'Add' }}
           </button>
-          <button type="button" class="btn btn-cancel" (click)="onClose()">Cancel</button>
+          <button type="button" class="btn btn-cancel" (click)="onClose()" [disabled]="isLoading">Cancel</button>
         </div>
       </form>
     </div>

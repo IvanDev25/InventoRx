@@ -23,6 +23,7 @@ export class MedicineComponent {
   dataSource = new MatTableDataSource<any>([]);
   allMedicines: any[] = []; // Store all medicines for pagination
   originalMedicines: any[] = []; // Store original data for filtering
+  isLoading: boolean = false;
 
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -35,6 +36,7 @@ export class MedicineComponent {
   // Refill state management
   refillingMedicineId: number | null = null;
   refillQuantity: number = 0;
+  refillLoading = new Map<number, boolean>(); // Track loading state per medicine ID
 
   constructor(
     private medicineService: MedicineService,
@@ -49,6 +51,9 @@ export class MedicineComponent {
   }
 
   loadMedicines(): void {
+    this.isLoading = true;
+    this.cdr.detectChanges();
+
     this.medicineService.getMedicine().subscribe(
       (data) => {
         // Sort medicines to prioritize Low Stock items at the top
@@ -59,10 +64,13 @@ export class MedicineComponent {
         this.totalPages = Math.ceil(this.totalItems / this.pageSize);
         this.updateDisplayedData();
 
+        this.isLoading = false;
         this.cdr.detectChanges();
       },
       (error) => {
         console.error('Error fetching medicines:', error);
+        this.isLoading = false;
+        this.cdr.detectChanges();
       }
     );
   }
@@ -184,6 +192,10 @@ export class MedicineComponent {
       return;
     }
 
+    // Set loading state
+    this.refillLoading.set(row.id, true);
+    this.cdr.detectChanges();
+
     // Call the API to refill the medicine
     this.medicineService.refillMedicine(row.id, this.refillQuantity).subscribe({
       next: (response) => {
@@ -203,6 +215,10 @@ export class MedicineComponent {
           }
         });
 
+        // Clear loading state
+        this.refillLoading.set(row.id, false);
+        this.cdr.detectChanges();
+
         Swal.fire({
           title: 'Refilled!',
           text: `"${row.genericName}" has been refilled with ${this.refillQuantity} units successfully.`,
@@ -219,6 +235,11 @@ export class MedicineComponent {
       },
       error: (error) => {
         console.error('Error refilling medicine:', error);
+        
+        // Clear loading state
+        this.refillLoading.set(row.id, false);
+        this.cdr.detectChanges();
+        
         Swal.fire({
           title: 'Error!',
           text: 'Failed to refill the medicine. Please try again later.',
@@ -230,6 +251,10 @@ export class MedicineComponent {
 
   isRefilling(medicineId: number): boolean {
     return this.refillingMedicineId === medicineId;
+  }
+
+  isRefillLoading(medicineId: number): boolean {
+    return this.refillLoading.get(medicineId) || false;
   }
 
 
@@ -277,6 +302,18 @@ export class MedicineComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
+        // Show loading overlay
+        Swal.fire({
+          title: 'Processing...',
+          html: 'Deleting medicine, please wait...',
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          showConfirmButton: false,
+          didOpen: () => {
+            Swal.showLoading();
+          }
+        });
+
         this.medicineService.deleteMedicine(row.id).subscribe({
           next: () => {
             // Log audit after successful medicine deletion
@@ -295,6 +332,7 @@ export class MedicineComponent {
               }
             });
 
+            Swal.close();
             Swal.fire({
               title: 'Deleted!',
               text: 'The medicine has been deleted successfully.',
@@ -306,6 +344,7 @@ export class MedicineComponent {
           },
           error: (error) => {
             console.error('Error deleting medicine:', error);
+            Swal.close();
             Swal.fire({
               title: 'Error!',
               text: 'Failed to delete the medicine. Please try again later.',

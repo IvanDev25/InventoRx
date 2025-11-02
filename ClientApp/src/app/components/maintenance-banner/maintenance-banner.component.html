@@ -1,0 +1,16 @@
+<!-- Maintenance Message Banner -->
+<div class="maintenance-banner" *ngIf="maintenanceEnabled" [class.banner-visible]="bannerVisible">
+  <div class="maintenance-glow"></div>
+  <div class="maintenance-shimmer"></div>
+  <div class="maintenance-banner-content">
+    <div class="maintenance-icon-wrapper">
+      <div class="maintenance-icon">⚠️</div>
+      <div class="icon-rings"></div>
+    </div>
+    <div class="maintenance-message">
+      <strong class="message-title">System Maintenance Notice:</strong> 
+      <span class="message-text">Please avoid using this system during maintenance hours. Avoid making critical updates, save your work frequently, and report any issues immediately.</span>
+    </div>
+  </div>
+</div>
+

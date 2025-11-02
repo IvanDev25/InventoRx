@@ -1,0 +1,144 @@
+<div class="receipt-modal-overlay" [class.active]="isVisible" (click)="onBackdropClick($event)">
+  <div class="receipt-modal-container" (click)="$event.stopPropagation()">
+    <div class="receipt-container">
+  <div class="receipt-actions">
+    <button class="action-btn print-btn" (click)="onPrint()" title="Print Receipt">
+      🖨️ Print
+    </button>
+    <button class="action-btn close-btn" (click)="onClose()" title="Close">
+      ✕ Close
+    </button>
+  </div>
+
+  <div class="receipt-content" id="receipt-content">
+    <!-- Hospital Header -->
+    <div class="receipt-header">
+      <div class="header-top">
+        <div class="logo-area">
+          <div class="hospital-logo">
+            <img src="../../assets/logo-hospital.png" alt="Hospital Logo" class="logo-image" />
+          </div>
+        </div>
+        <div class="hospital-info">
+          <p class="country-text">Republic of the Philippines</p>
+          <p class="province-text">Province of Aklan</p>
+          <h1 class="hospital-name">CIRIACO TIROL S. TIROL HOSPITAL</h1>
+          <p class="hospital-address">Balabag, Boracay Island, Malay, Aklan</p>
+        </div>
+      </div>
+      
+      <!-- Department Title -->
+      <div class="department-title">
+        <h2>PHARMACY DEPARTMENT</h2>
+      </div>
+    </div>
+
+    <!-- Patient Details -->
+    <div class="patient-details">
+      <div class="detail-row top-row">
+        <div class="detail-group">
+          <span class="detail-label">NAME:</span>
+          <span class="detail-value">{{ patientData?.patientName || 'N/A' }}</span>
+        </div>
+        <div class="detail-group-right">
+          <div class="detail-group">
+            <span class="detail-label">DATE:</span>
+            <span class="detail-value">{{ currentDate }}</span>
+          </div>
+          <div class="detail-group">
+            <span class="detail-label">STATUS:</span>
+            <span class="detail-value">{{ getStatusText() }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Items Table -->
+    <div class="items-container">
+      <table class="items-table">
+        <thead>
+          <tr class="table-header">
+            <th class="col-qty">QTY</th>
+            <th class="col-description">Description</th>
+            <th class="col-cost">Cost</th>
+            <th class="col-total">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- ACS Section - Always Displayed -->
+          <tr class="section-header-row">
+            <td class="col-qty"></td>
+            <td class="section-label" colspan="3">ACS</td>
+          </tr>
+          <tr *ngFor="let medicine of acsMedicines" class="item-row">
+            <td class="col-qty">{{ medicine.quantity || 0 }}</td>
+            <td class="col-description">{{ medicine.medicineName || 'N/A' }}</td>
+            <td class="col-cost">{{ formatPrice(medicine.price || 0) }}</td>
+            <td class="col-total">{{ formatPrice(medicine.priceTotal || 0) }}</td>
+          </tr>
+          <!-- Empty rows if no medicines to maintain fixed size -->
+          <tr *ngFor="let i of getEmptyRows(acsMedicines.length, 5)" class="item-row empty-row">
+            <td class="col-qty"></td>
+            <td class="col-description"></td>
+            <td class="col-cost"></td>
+            <td class="col-total"></td>
+          </tr>
+          <tr class="section-total-row">
+            <td class="col-qty"></td>
+            <td class="col-description total-label">Total Amount:</td>
+            <td class="col-cost"></td>
+            <td class="col-total total-value">{{ formatPrice(patientData?.nonRegularConsignerTotal || 0) }}</td>
+          </tr>
+
+          <!-- REGULAR Section - Always Displayed -->
+          <tr class="section-header-row">
+            <td class="col-qty"></td>
+            <td class="section-label" colspan="3">REGULAR</td>
+          </tr>
+          <tr *ngFor="let medicine of regularMedicines" class="item-row">
+            <td class="col-qty">{{ medicine.quantity || 0 }}</td>
+            <td class="col-description">{{ medicine.medicineName || 'N/A' }}</td>
+            <td class="col-cost">{{ formatPrice(medicine.price || 0) }}</td>
+            <td class="col-total">{{ formatPrice(medicine.priceTotal || 0) }}</td>
+          </tr>
+          <!-- Empty rows if no medicines to maintain fixed size -->
+          <tr *ngFor="let i of getEmptyRows(regularMedicines.length, 5)" class="item-row empty-row">
+            <td class="col-qty"></td>
+            <td class="col-description"></td>
+            <td class="col-cost"></td>
+            <td class="col-total"></td>
+          </tr>
+          <tr class="section-total-row">
+            <td class="col-qty"></td>
+            <td class="col-description total-label">Total Amount:</td>
+            <td class="col-cost"></td>
+            <td class="col-total total-value">{{ formatPrice(patientData?.regularConsignerTotal || 0) }}</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr class="grand-total-row">
+            <td class="col-qty"></td>
+            <td class="col-description grand-total-label">GRAND TOTAL:</td>
+            <td class="col-cost"></td>
+            <td class="col-total grand-total-value">{{ formatPrice(patientData?.patientTotal || 0) }}</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <!-- Footer -->
+    <div class="receipt-footer">
+      <div class="signature-line">
+        <div class="dashed-line"></div>
+        <span class="signature-text">Signature</span>
+      </div>
+      <div class="generated-by">
+        <span>Generated by Inventorx</span>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+
+
+

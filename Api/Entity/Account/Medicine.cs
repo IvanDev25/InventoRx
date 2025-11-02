@@ -34,7 +34,7 @@ namespace Api.Entity.Account
             get 
             {
                 bool isLowStock = Stock < 20;
-                bool isExpiringSoon = ExpirationDate <= DateTime.Now.AddMonths(1);
+                bool isExpiringSoon = ExpirationDate <= DateTime.Now.AddMonths(3);
                 
                 if (isLowStock && isExpiringSoon)
                 {

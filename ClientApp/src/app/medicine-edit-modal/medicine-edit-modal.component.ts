@@ -16,6 +16,7 @@ export class MedicineEditModalComponent implements OnInit {
   suppliers: any[] = [];
   selectedSupplierId: number | null = null;
   originalData: any = {}; // Store original data for comparison
+  isLoading: boolean = false;
 
   // Model for form data
   medicineData = {
@@ -112,6 +113,9 @@ export class MedicineEditModalComponent implements OnInit {
       return;
     }
 
+    // Start loading
+    this.isLoading = true;
+
     // Ensure supplierId is valid
     this.medicineData.medicineSupplierId = this.selectedSupplierId ?? 0;
 
@@ -130,11 +134,13 @@ export class MedicineEditModalComponent implements OnInit {
         // Log specific audit messages for changed fields
         this.logSpecificChanges();
         
+        this.isLoading = false;
         Swal.fire('Success', 'Medicine updated successfully!', 'success');
         this.dialogRef.close(true);
       },
       error: (error) => {
         console.error('Error updating medicine:', error);
+        this.isLoading = false;
         Swal.fire('Error', 'Failed to update medicine.', 'error');
       }
     });

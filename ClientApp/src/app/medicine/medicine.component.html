@@ -23,7 +23,13 @@ Add Medicine</button>
 
 
   
-  <div class="body-content">
+  <div class="body-content" [class.loading-mode]="isLoading">
+    <!-- Loading Overlay -->
+    <div class="table-loading-overlay" *ngIf="isLoading">
+      <div class="table-loading-spinner"></div>
+      <p class="table-loading-text">Loading medicines...</p>
+    </div>
+
     <table mat-table [dataSource]="dataSource" matSort class="custom-table">
 
  <!-- Generic Name -->
@@ -106,7 +112,12 @@ Add Medicine</button>
         </div>
 
         <!-- Refill input interface -->
-        <div *ngIf="isRefilling(row.id)" class="refill-input-container">
+        <div *ngIf="isRefilling(row.id)" class="refill-input-container" [class.loading-mode]="isRefillLoading(row.id)">
+          <!-- Loading Overlay -->
+          <div class="loading-overlay" *ngIf="isRefillLoading(row.id)">
+            <div class="loading-spinner-small"></div>
+          </div>
+
           <div class="refill-input-wrapper">
             <input 
               type="number" 
@@ -114,6 +125,7 @@ Add Medicine</button>
               placeholder="Quantity" 
               [(ngModel)]="refillQuantity"
               min="1"
+              [disabled]="isRefillLoading(row.id)"
               (keyup.enter)="saveRefill(row)"
               (keyup.escape)="cancelRefill()"
               #refillInput>
@@ -123,20 +135,23 @@ Add Medicine</button>
               <button 
                 class="refill-action-btn cancel-btn" 
                 (click)="cancelRefill()"
+                [disabled]="isRefillLoading(row.id)"
                 title="Cancel">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M12 4L4 12M4 4L12 12" stroke="#FF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </button>
               
-              <!-- Save button (R icon) -->
+              <!-- Save button (checkmark icon) -->
               <button 
                 class="refill-action-btn save-btn" 
                 (click)="saveRefill(row)"
+                [disabled]="isRefillLoading(row.id)"
                 title="Save Refill">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" *ngIf="!isRefillLoading(row.id)">
                   <path d="M13.5 4.5L6 12L2.5 8.5" stroke="#37A35C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
+                <div class="spinner-small" *ngIf="isRefillLoading(row.id)"></div>
               </button>
             </div>
           </div>

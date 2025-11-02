@@ -99,13 +99,34 @@
       <div class="dropdown-arrow"></div>
   
       <div class="dropdown" [class.active]="activeDropdown === 'user'">
+        <!-- Maintenance Toggle (Only for maintenance user) -->
+        <div *ngIf="isMaintenanceUser()" class="maintenance-toggle-dropdown-item">
+          <div class="maintenance-toggle-wrapper">
+            <label class="maintenance-toggle-label">
+              <input 
+                type="checkbox" 
+                class="maintenance-toggle" 
+                [checked]="maintenanceMessageEnabled"
+                (change)="toggleMaintenanceMessage()"
+                title="Toggle Maintenance Message">
+              <span class="toggle-slider"></span>
+            </label>
+            <span class="maintenance-toggle-text">
+              <span class="maintenance-icon-small">⚠️</span>
+              Maintenance Message
+            </span>
+          </div>
+        </div>
+        
+        <div class="dropdown-divider" *ngIf="isMaintenanceUser()"></div>
+        
         <div class="dropdown-item">
           <span class="dropdown-icon">👤</span>
           <span class="dropdown-text">Profile</span>
         </div>
-        <div class="dropdown-item">
-          <span class="dropdown-icon">❓</span>
-          <span class="dropdown-text">Help</span>
+        <div class="dropdown-item" (click)="openSchedule()">
+          <span class="dropdown-icon">🗓️</span>
+          <span class="dropdown-text">Schedule</span>
         </div>
         <div class="dropdown-item" routerLink="/account/login"(click)="logout()" *ngIf="(accountService.user$ | async) as user">
           <span class="dropdown-icon">🚪</span>
@@ -113,6 +134,18 @@
         </div>
       </div>
     </div>
+    </div>
+  </div>
+
+  <!-- Schedule Modal -->
+  <div class="schedule-modal-backdrop" *ngIf="showSchedule" (click)="closeSchedule()"></div>
+  <div class="schedule-modal" *ngIf="showSchedule">
+    <div class="schedule-header">
+      <div class="title">Schedule</div>
+      <button class="close-btn" (click)="closeSchedule()">×</button>
+    </div>
+    <div class="schedule-body">
+      <img src="../../assets/October.jpg" alt="Schedule" style="max-width: 100%; height: auto; border-radius: 8px;" />
     </div>
   </div>
   

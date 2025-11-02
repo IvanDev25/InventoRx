@@ -51,7 +51,32 @@
 </div> -->
 
 
-<div class="login-background">
+<div class="login-background" [class.loading-mode]="isLoading">
+  <!-- Loading overlay -->
+  <div class="login-loading-overlay" *ngIf="isLoading">
+    <!-- decorative floating pills in background -->
+    <div class="floating-pill"></div>
+    <div class="floating-pill"></div>
+    <div class="floating-pill"></div>
+    <div class="floating-pill"></div>
+
+    <div class="container">
+      <div class="pills-container">
+        <div class="pill"></div>
+        <div class="pill"></div>
+        <div class="pill"></div>
+        <div class="pill"></div>
+      </div>
+      
+      <div class="loading-text">
+        LOADING<span class="dots"><span>.</span><span>.</span><span>.</span></span>
+      </div>
+
+      <div class="progress-bar">
+        <div class="progress-fill"></div>
+      </div>
+    </div>
+  </div>
   <div class="login-container">
     <!-- Logo and Brand -->
     <div class="logo-section">
@@ -105,13 +130,13 @@
           <input type="checkbox" id="remember" />
           <label for="remember">Remember me</label>
         </div>
-        <a href="#" (click)="resendEmailConfirmationLink()" class="forgot-password">
+        <a href="#" class="forgot-password">
           Forgot password?
         </a>
       </div>
 
       <!-- Login Button -->
-      <button type="submit" class="login-btn">Log in</button>
+      <button type="submit" class="login-btn" [disabled]="isLoading">{{ isLoading ? 'Logging in...' : 'Log in' }}</button>
     </form>
   </div>
 </div>

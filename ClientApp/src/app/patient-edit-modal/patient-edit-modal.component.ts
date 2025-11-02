@@ -19,6 +19,7 @@ export class PatientEditModalComponent {
   originalAssignedMedicines: any[] = []; // Track original assignments for comparison
   originalPatientName: string = ''; // Track original patient name for audit
   originalIsAdmitted: boolean = false; // Track original admission status for audit
+  isLoading: boolean = false;
 
   // ✅ Model for form data (allowing null for safety)
   patientData = {
@@ -165,6 +166,9 @@ export class PatientEditModalComponent {
       return;
     }
 
+    // Start loading
+    this.isLoading = true;
+
     // Check if patient data was changed
     const patientNameChanged = this.originalPatientName !== this.patientData.patientName;
     const admissionStatusChanged = this.originalIsAdmitted !== this.patientData.isAdmitted;
@@ -194,6 +198,7 @@ export class PatientEditModalComponent {
       },
       error: (error: any) => {
         console.error('Error updating patient name:', error);
+        this.isLoading = false;
         Swal.fire('Error', 'Failed to update patient name.', 'error');
       }
     });
@@ -214,6 +219,7 @@ export class PatientEditModalComponent {
     
     // If no changes, just return
     if (medicinesToRemove.length === 0 && medicinesToAdd.length === 0) {
+      this.isLoading = false;
       Swal.fire('Info', 'No medicine changes detected.', 'info');
       return;
     }
@@ -233,8 +239,11 @@ export class PatientEditModalComponent {
         if (!hasError) {
           // Log specific audit messages for added/removed medicines
           this.logMedicineChanges();
+          this.isLoading = false;
           Swal.fire('Success', 'Patient medicine assignments updated successfully!', 'success');
           this.dialogRef.close(true);
+        } else {
+          this.isLoading = false;
         }
       }
     };
@@ -249,6 +258,7 @@ export class PatientEditModalComponent {
         error: (error) => {
           console.error('Error removing medicines:', error);
           hasError = true;
+          this.isLoading = false;
           Swal.fire('Error', 'Failed to remove some medicines.', 'error');
           checkCompletion();
         }
@@ -265,6 +275,7 @@ export class PatientEditModalComponent {
         error: (error) => {
           console.error('Error assigning medicines:', error);
           hasError = true;
+          this.isLoading = false;
           Swal.fire('Error', 'Failed to assign some medicines.', 'error');
           checkCompletion();
         }

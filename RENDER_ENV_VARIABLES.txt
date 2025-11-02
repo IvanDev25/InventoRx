@@ -18,3 +18,9 @@ MailJet__ApiKey=49a67eb1af48e81ab8ce9b3fbd2bf532
 MailJet__SecretKey=f8d6d09d05cf40395b01629dd4da42a9
 ASPNETCORE_ENVIRONMENT=Production
 
+
+
+
+
+
+

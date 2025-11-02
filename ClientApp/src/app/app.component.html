@@ -15,6 +15,15 @@
 <!-- Toast Notifications Container -->
 <app-toast-container></app-toast-container>
 
+<!-- Maintenance Banner (shown on all pages when enabled) -->
+<app-maintenance-banner *ngIf="!isAuthLoading"></app-maintenance-banner>
+
+<!-- Global Chat Widget (only on main app pages) -->
+<app-chat-widget *ngIf="showChat && !isAuthLoading"></app-chat-widget>
+
+<!-- Global Receipt View Modal -->
+<app-receipt-view></app-receipt-view>
+
 
 
 <!-- 

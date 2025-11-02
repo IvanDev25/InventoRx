@@ -1,6 +1,5 @@
 <div class="medicine-container" style="padding: 100px;">
 
-
       <!-- Global Search Bar -->
       <div class="global-search-container">
         <div class="supplier-search-bar">
@@ -15,17 +14,23 @@
   <path d="M6 8H1C0.71667 8 0.479337 7.904 0.288004 7.712C0.0966702 7.52 0.000670115 7.28267 3.44827e-06 7C-0.000663218 6.71734 0.0953369 6.48 0.288004 6.288C0.48067 6.096 0.718003 6 1 6H6V1C6 0.71667 6.096 0.479337 6.288 0.288004C6.48 0.0966702 6.71734 0.000670115 7 3.44827e-06C7.28267 -0.000663218 7.52034 0.0953369 7.713 0.288004C7.90567 0.48067 8.00134 0.718003 8 1V6H13C13.2833 6 13.521 6.096 13.713 6.288C13.905 6.48 14.0007 6.71734 14 7C13.9993 7.28267 13.9033 7.52034 13.712 7.713C13.5207 7.90567 13.2833 8.00134 13 8H8V13C8 13.2833 7.904 13.521 7.712 13.713C7.52 13.905 7.28267 14.0007 7 14C6.71734 13.9993 6.48 13.9033 6.288 13.712C6.096 13.5207 6 13.2833 6 13V8Z" fill="white"/>
   </svg>
   
-  Add Medicine</button>
+  Add Patient</button>
         </div>
       </div>
 
 
-  <div class="body-content">
+  <div class="body-content" [class.loading-mode]="isLoading">
+    <!-- Loading Overlay -->
+    <div class="table-loading-overlay" *ngIf="isLoading">
+      <div class="table-loading-spinner"></div>
+      <p class="table-loading-text">Loading patients...</p>
+    </div>
+
     <table mat-table matSort class="custom-table" [dataSource]="paginatedData">
 
       <!-- Patient Name Column -->
       <ng-container matColumnDef="patientName">
-        <th  class="th-header" mat-header-cell *matHeaderCellDef mat-sort-header>Patient Name</th>
+        <th  class="th-header" mat-header-cell *matHeaderCellDef mat-sort-header>PATIENT</th>
         <td class="td-body" mat-cell *matCellDef="let row" 
             [attr.rowspan]="row.isFirstMedicine ? row.rowspan : null"
             [style.display]="row.isFirstMedicine ? 'table-cell' : 'none'">
@@ -35,13 +40,13 @@
 
       <!-- Medicine Name Column -->
       <ng-container matColumnDef="medicineName">
-        <th class="th-header" mat-header-cell *matHeaderCellDef>Medicine Name</th>
+        <th class="th-header" mat-header-cell *matHeaderCellDef>MEDICINE</th>
         <td class="td-body" mat-cell *matCellDef="let row">{{ row.medicineName }}</td>
       </ng-container>
 
       <!-- Supplier Name Column -->
       <ng-container matColumnDef="supplierName">
-        <th class="th-header" mat-header-cell *matHeaderCellDef>Consignor</th>
+        <th class="th-header" mat-header-cell *matHeaderCellDef>ACS</th>
         <td class="td-body" mat-cell *matCellDef="let row">
           <span [class.regular-supplier]="row.supplierName === 'REGULAR'">{{ row.supplierName }}</span>
         </td>
@@ -49,9 +54,14 @@
 
       <!-- Issuance Column -->
       <ng-container matColumnDef="issuance">
-        <th class="th-header" mat-header-cell *matHeaderCellDef>Issuance</th>
+        <th class="th-header" mat-header-cell *matHeaderCellDef>ISSUANCE</th>
         <td class="td-body" mat-cell *matCellDef="let row">
-          <div class="issuance-input-container">
+          <div class="issuance-input-container" [class.loading-mode]="isIssuanceLoading(row)">
+            <!-- Loading Overlay -->
+            <div class="loading-overlay" *ngIf="isIssuanceLoading(row)">
+              <div class="loading-spinner-small"></div>
+            </div>
+
             <div class="issuance-input-wrapper">
               <input 
                 type="number" 
@@ -59,6 +69,7 @@
                 placeholder="Quantity" 
                 [(ngModel)]="row.issuance"
                 min="1"
+                [disabled]="isIssuanceLoading(row)"
                 (keyup.enter)="saveIssuance(row)"
                 (keyup.escape)="cancelIssuance()"
                 #issuanceInput>
@@ -68,10 +79,12 @@
                 <button 
                   class="issuance-action-btn save-btn" 
                   (click)="saveIssuance(row)"
+                  [disabled]="isIssuanceLoading(row)"
                   title="Save Issuance">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" *ngIf="!isIssuanceLoading(row)">
                     <path d="M13.5 4.5L6 12L2.5 8.5" stroke="#37A35C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
+                  <div class="spinner-small" *ngIf="isIssuanceLoading(row)"></div>
                 </button>
               </div>
             </div>
@@ -81,20 +94,26 @@
 
       <!-- Return Column -->
       <ng-container matColumnDef="return">
-        <th class="th-header" mat-header-cell *matHeaderCellDef>Return</th>
+        <th class="th-header" mat-header-cell *matHeaderCellDef>RETURN</th>
         <td class="td-body" mat-cell *matCellDef="let row">
           <!-- Checkbox initially displayed -->
           <div *ngIf="!row.showReturnInput" class="return-checkbox-container">
             <input 
               type="checkbox" 
               [checked]="false"
+              [disabled]="isReturnLoading(row)"
               (change)="toggleReturnInput(row, $any($event.target).checked)"
               class="return-checkbox">
             <span class="return-checkbox-label"></span>
           </div>
 
           <!-- Input interface when checkbox is checked -->
-          <div *ngIf="row.showReturnInput" class="return-input-container">
+          <div *ngIf="row.showReturnInput" class="return-input-container" [class.loading-mode]="isReturnLoading(row)">
+            <!-- Loading Overlay -->
+            <div class="loading-overlay" *ngIf="isReturnLoading(row)">
+              <div class="loading-spinner-small"></div>
+            </div>
+
             <div class="return-input-wrapper">
               <input 
                 type="number" 
@@ -102,6 +121,7 @@
                 placeholder="Quantity" 
                 [(ngModel)]="row.return"
                 min="0"
+                [disabled]="isReturnLoading(row)"
                 (keyup.enter)="saveReturn(row)"
                 (keyup.escape)="cancelReturn(row)"
                 #returnInput>
@@ -111,8 +131,9 @@
                 <button 
                   class="return-action-btn cancel-btn" 
                   (click)="cancelReturn(row)"
+                  [disabled]="isReturnLoading(row)"
                   title="Cancel">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" *ngIf="!isReturnLoading(row)">
                     <path d="M12 4L4 12M4 4L12 12" stroke="#FF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
                 </button>
@@ -121,10 +142,12 @@
                 <button 
                   class="return-action-btn save-btn" 
                   (click)="saveReturn(row)"
+                  [disabled]="isReturnLoading(row)"
                   title="Save Return">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" *ngIf="!isReturnLoading(row)">
                     <path d="M13.5 4.5L6 12L2.5 8.5" stroke="#37A35C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
+                  <div class="spinner-small" *ngIf="isReturnLoading(row)"></div>
                 </button>
               </div>
             </div>
@@ -134,13 +157,13 @@
 
       <!-- Stock Column -->
       <ng-container matColumnDef="stock">
-        <th class="th-header" mat-header-cell *matHeaderCellDef>Stock</th>
+        <th class="th-header" mat-header-cell *matHeaderCellDef>STOCK</th>
         <td class="td-body" mat-cell *matCellDef="let row">{{ row.stock }}</td>
       </ng-container>
 
       <!-- Quantity Column -->
       <ng-container matColumnDef="quantity">
-        <th class="th-header" mat-header-cell *matHeaderCellDef>Qty</th>
+        <th class="th-header" mat-header-cell *matHeaderCellDef>QTY</th>
         <td class="td-body" mat-cell *matCellDef="let row">
           <span class="quantity-display" [class.negative-quantity]="row.quantity < 0">
             {{ row.quantity }}
@@ -150,7 +173,7 @@
 
       <!-- Price Column -->
       <ng-container matColumnDef="price">
-        <th class="th-header" mat-header-cell *matHeaderCellDef>Price</th>
+        <th class="th-header" mat-header-cell *matHeaderCellDef>PRICE</th>
         <td class="td-body" mat-cell *matCellDef="let row">
           <span class="price-display">
             ₱{{ row.price | number:'1.2-2' }}
@@ -160,17 +183,16 @@
 
       <!-- Price Total Column -->
       <ng-container matColumnDef="priceTotal">
-        <th class="th-header" mat-header-cell *matHeaderCellDef>Total</th>
+        <th class="th-header" mat-header-cell *matHeaderCellDef>AMOUNT</th>
         <td class="td-body" mat-cell *matCellDef="let row">
           <span class="price-total-display">
             ₱{{ row.priceTotal | number:'1.2-2' }}
           </span>
         </td>
       </ng-container>
-
       <!-- Patient Total Column -->
       <ng-container matColumnDef="patientTotal">
-        <th class="th-header" mat-header-cell *matHeaderCellDef></th>
+        <th class="th-header" mat-header-cell *matHeaderCellDef>TOTAL AMOUNT</th>
         <td class="td-body" mat-cell *matCellDef="let row" 
             [attr.rowspan]="row.isFirstMedicine ? row.rowspan : null"
             [style.display]="row.isFirstMedicine ? 'table-cell' : 'none'">
@@ -194,7 +216,7 @@
 
       <!-- Action Column -->
       <ng-container matColumnDef="action">
-        <th class="th-header" mat-header-cell *matHeaderCellDef>Action</th>
+        <th class="th-header" mat-header-cell *matHeaderCellDef>ACTION</th>
         <td class="td-body" mat-cell *matCellDef="let row" 
             [attr.rowspan]="row.isFirstMedicine ? row.rowspan : null"
             [style.display]="row.isFirstMedicine ? 'table-cell' : 'none'">
@@ -208,12 +230,19 @@
                   </mat-icon>
               </button>
               
+              <!-- Receipt View Button -->
+              <button mat-icon-button color="primary" class="receipt-view-btn" (click)="viewReceipt(row)" title="View Receipt">
+                <mat-icon><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M16 2H4C2.9 2 2 2.9 2 4V16C2 17.1 2.9 18 4 18H16C17.1 18 18 17.1 18 16V4C18 2.9 17.1 2 16 2ZM16 16H4V4H16V16ZM6 6H14V8H6V6ZM6 10H14V12H6V10ZM6 14H10V16H6V14Z" fill="#41454A"/>
+                </svg></mat-icon>
+              </button>
+              
               <!-- PDF Download Button -->
-              <button mat-icon-button color="accent" class="pdf-download-btn" (click)="downloadPatientPDF(row)" title="Download Patient Report">
+              <!-- <button mat-icon-button color="accent" class="pdf-download-btn" (click)="downloadPatientPDF(row)" title="Download Patient Report">
                 <mat-icon><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M3 17V3C3 2.45 3.19567 1.97933 3.587 1.588C3.97833 1.19667 4.44933 1.00067 5 1H15C15.55 1 16.021 1.19567 16.413 1.587C16.805 1.97833 17.0007 2.44933 17 3V17C17 17.55 16.8043 18.021 16.413 18.413C16.0217 18.805 15.5507 19.0007 15 19H5C4.45 19 3.97933 18.8043 3.588 18.413C3.19667 18.0217 3.00067 17.5507 3 17ZM5 3V17H15V3H5ZM7 5H13V7H7V5ZM7 9H13V11H7V9ZM7 13H10V15H7V13Z" fill="#41454A"/>
                 </svg></mat-icon>
-              </button>
+              </button> -->
               <!-- Show different button based on admission status -->
               <button mat-icon-button 
                       [color]="row.isAdmitted ? 'primary' : 'warn'" 

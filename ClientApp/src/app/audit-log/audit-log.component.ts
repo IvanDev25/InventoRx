@@ -16,6 +16,7 @@ export class AuditLogComponent implements OnInit {
   filteredAuditLogs: any[] = [];
   paginatedData: any[] = [];
   searchTerm: string = '';
+  isLoading: boolean = false;
 
   // Pagination properties
   currentPage: number = 1;
@@ -41,6 +42,9 @@ export class AuditLogComponent implements OnInit {
   }
 
   loadAuditLogs(): void {
+    this.isLoading = true;
+    this.cdr.detectChanges();
+
     this.auditService.getAllAudits().subscribe({
       next: (response) => {
         this.auditLogs = response;
@@ -53,10 +57,13 @@ export class AuditLogComponent implements OnInit {
         // Update paginated data
         this.updatePaginatedData();
         
+        this.isLoading = false;
         this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error loading audit logs:', error);
+        this.isLoading = false;
+        this.cdr.detectChanges();
       }
     });
   }

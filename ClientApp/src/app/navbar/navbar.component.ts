@@ -1,15 +1,17 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { AccountService } from '../account/account.service';
 import { MedicineService } from '../medicine/medicine.service';
+import { MaintenanceService } from '../services/maintenance.service';
 import { filter } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss']
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit, OnDestroy {
   hideNavbar: boolean = false;
   activeDropdown: 'language' | 'user' | 'notification' | null = null;
   currentPageTitle: string = 'Dashboard';
@@ -20,11 +22,20 @@ export class NavbarComponent implements OnInit {
   // Notification properties
   notifications: any[] = [];
   notificationCount: number = 0;
+  showSchedule: boolean = false;
+  
+  // Maintenance properties
+  currentUser: any = null;
+  maintenanceMessageEnabled: boolean = false;
+  readonly MAINTENANCE_USER_ID = '46f0d282-5fe1-42cb-b6bc-99fe75696fe8';
+  private userSubscription?: Subscription;
+  private maintenanceSubscription?: Subscription;
 
   constructor(
     public accountService: AccountService,
     private router: Router,
-    private medicineService: MedicineService
+    private medicineService: MedicineService,
+    private maintenanceService: MaintenanceService
   ) {}
 
   ngOnInit(): void {
@@ -44,8 +55,9 @@ export class NavbarComponent implements OnInit {
         ];
 
         // Check if user is not logged in and on root path
-        this.accountService.user$.subscribe(user => {
+        this.userSubscription = this.accountService.user$.subscribe(user => {
            console.log('User from accountService.user$:', user);
+           this.currentUser = user;
           this.hideNavbar =
             hideOnRoutes.includes(url) || (url === '/' && !user);
           
@@ -55,6 +67,30 @@ export class NavbarComponent implements OnInit {
           }
         });
       });
+    
+    // Subscribe to maintenance state
+    this.maintenanceMessageEnabled = this.maintenanceService.getMaintenanceEnabled();
+    this.maintenanceSubscription = this.maintenanceService.maintenanceEnabled$.subscribe(enabled => {
+      this.maintenanceMessageEnabled = enabled;
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
+    }
+    if (this.maintenanceSubscription) {
+      this.maintenanceSubscription.unsubscribe();
+    }
+  }
+
+  isMaintenanceUser(): boolean {
+    return this.currentUser?.id === this.MAINTENANCE_USER_ID;
+  }
+
+  toggleMaintenanceMessage(): void {
+    this.maintenanceService.toggleMaintenanceMessage();
+    this.activeDropdown = null; // Close dropdown after toggle
   }
 
   updatePageTitle(url: string): void {
@@ -168,6 +204,15 @@ export class NavbarComponent implements OnInit {
   navigateToMedicine(): void {
     this.activeDropdown = null;
     this.router.navigate(['/Medicine']);
+  }
+
+  openSchedule(): void {
+    this.activeDropdown = null;
+    this.showSchedule = true;
+  }
+
+  closeSchedule(): void {
+    this.showSchedule = false;
   }
 
   @HostListener('document:click', ['$event'])

@@ -1,0 +1,268 @@
+// Maintenance Banner
+.maintenance-banner {
+  position: fixed;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  background: linear-gradient(135deg, #FF9C11 0%, #FF8C00 50%, #FF9C11 100%);
+  background-size: 200% 200%;
+  color: white;
+  padding: 10px 24px;
+  border-radius: 12px;
+  box-shadow: 
+    0 8px 32px rgba(255, 156, 17, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  animation: bannerEntrance 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55),
+             gradientShift 4s ease-in-out infinite;
+  
+  // Floating animation applied after entrance
+  &.banner-visible {
+    animation: bannerFloat 3s ease-in-out infinite,
+               gradientShift 4s ease-in-out infinite;
+  }
+  max-width: 90%;
+  width: auto;
+  min-width: 500px;
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+
+  // Animated glow effect behind banner
+  .maintenance-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120%;
+    height: 150%;
+    background: radial-gradient(circle, rgba(255, 156, 17, 0.4) 0%, rgba(255, 140, 0, 0.2) 40%, transparent 70%);
+    border-radius: 50%;
+    animation: glowPulse 3s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  // Shimmer effect
+  .maintenance-shimmer {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.3),
+      transparent
+    );
+    animation: shimmer 3s infinite;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .maintenance-banner-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .maintenance-icon-wrapper {
+    position: relative;
+    flex-shrink: 0;
+    
+    .maintenance-icon {
+      font-size: 20px;
+      animation: iconBounceRotate 2.5s ease-in-out infinite;
+      position: relative;
+      z-index: 1;
+      display: inline-block;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+      transform-origin: center center;
+    }
+
+    .icon-rings {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 30px;
+      height: 30px;
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      border-radius: 50%;
+      animation: ringExpand 2s ease-out infinite;
+      
+      &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 36px;
+        height: 36px;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        animation: ringExpand 2s ease-out 0.5s infinite;
+      }
+    }
+  }
+
+  .maintenance-message {
+    flex: 1;
+    font-size: 12px;
+    line-height: 1.4;
+    font-weight: 500;
+    animation: textFadeIn 1s ease-out 0.3s both;
+
+    .message-title {
+      font-weight: 700;
+      font-size: 13px;
+      display: inline;
+      margin-right: 6px;
+      animation: titleSlide 0.6s ease-out 0.5s both;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .message-text {
+      display: inline;
+      animation: textSlide 0.8s ease-out 0.7s both;
+    }
+  }
+}
+
+// Entrance Animation
+@keyframes bannerEntrance {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -30px) scale(0.9) rotate(-3deg);
+    top: 60px;
+  }
+  50% {
+    transform: translate(-50%, 3px) scale(1.02) rotate(1deg);
+    top: 60px;
+  }
+  70% {
+    transform: translate(-50%, -1px) scale(0.99) rotate(-0.5deg);
+    top: 60px;
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1) rotate(0deg);
+    top: 60px;
+  }
+}
+
+// Floating Animation (only runs after entrance)
+.banner-visible {
+  animation: bannerFloat 3s ease-in-out infinite,
+             gradientShift 4s ease-in-out infinite !important;
+}
+
+@keyframes bannerFloat {
+  0%, 100% {
+    transform: translate(-50%, 0);
+    top: 60px;
+  }
+  50% {
+    transform: translate(-50%, -3px);
+    top: 60px;
+  }
+}
+
+// Gradient Animation
+@keyframes gradientShift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+// Glow Pulse Animation
+@keyframes glowPulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+
+// Shimmer Animation
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+// Icon Animations
+@keyframes iconBounceRotate {
+  0%, 100% {
+    transform: translateY(0) scale(1) rotate(0deg);
+  }
+  20% {
+    transform: translateY(-6px) scale(1.08) rotate(-8deg);
+  }
+  40% {
+    transform: translateY(0) scale(1) rotate(0deg);
+  }
+  60% {
+    transform: translateY(-4px) scale(1.05) rotate(6deg);
+  }
+  80% {
+    transform: translateY(0) scale(1) rotate(0deg);
+  }
+}
+
+// Ring Expansion Animation
+@keyframes ringExpand {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.5);
+  }
+}
+
+// Text Animations
+@keyframes textFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes titleSlide {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes textSlide {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+

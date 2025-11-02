@@ -1,0 +1,589 @@
+:host {
+  display: block;
+}
+
+/* Modal Overlay */
+.receipt-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  overflow-y: auto;
+  padding: 20px;
+  pointer-events: none;
+
+  &.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+}
+
+/* Modal Container */
+.receipt-modal-container {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  max-height: 90vh;
+  margin: auto;
+  background: white;
+  box-shadow: none;
+  pointer-events: auto;
+  border-radius: 8px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  
+  /* Custom scrollbar styling */
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 10px;
+    
+    &:hover {
+      background: #a8a8a8;
+    }
+  }
+  
+  /* Prevent click events from bubbling to overlay */
+  .receipt-container {
+    pointer-events: auto;
+  }
+}
+
+
+.receipt-container {
+  background-color: transparent;
+  position: relative;
+}
+
+.receipt-actions {
+  position: sticky;
+  top: 0;
+  background: linear-gradient(135deg, #8B5CF6 0%, #A855F7 100%);
+  padding: 12px 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.action-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: white;
+  color: #8B5CF6;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.receipt-content {
+  padding: 30px 40px;
+  max-width: 800px;
+  margin: 0 auto;
+  background: transparent;
+  font-family: Arial, Helvetica, sans-serif;
+  min-height: 600px; // Fixed minimum height for consistent receipt size
+  
+  @media print {
+    padding: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    min-height: 600px !important; // Maintain fixed height in print
+    
+    .receipt-actions {
+      display: none;
+    }
+  }
+}
+
+// Header Section
+.receipt-header {
+  margin-bottom: 25px;
+  
+  .header-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 20px;
+    
+    .logo-area {
+      flex-shrink: 0;
+      
+      .hospital-logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+        .logo-image {
+          width: 110px;
+          height: 110px;
+          object-fit: contain;
+          display: block;
+        }
+      }
+    }
+    
+    .hospital-info {
+      flex: 1;
+      text-align: left;
+      padding-left: 20px;
+      
+      .country-text {
+        font-size: 12px;
+        color: #000;
+        margin: 0 0 4px 0;
+        font-weight: 500;
+        letter-spacing: 0.3px;
+      }
+      
+      .province-text {
+        font-size: 12px;
+        color: #000;
+        margin: 0 0 8px 0;
+        font-weight: 500;
+        letter-spacing: 0.3px;
+      }
+      
+      .hospital-name {
+        font-size: 22px;
+        font-weight: 700;
+        color: #000;
+        margin: 0 0 8px 0;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        line-height: 1.2;
+      }
+      
+      .hospital-address {
+        font-size: 11px;
+        color: #000;
+        margin: 0;
+        font-weight: 400;
+        letter-spacing: 0.2px;
+      }
+    }
+  }
+  
+  .department-title {
+    text-align: center;
+    padding: 12px 0;
+    margin-top: 15px;
+    
+    h2 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #000;
+      margin: 0;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+  }
+}
+
+// Patient Details
+.patient-details {
+  margin-bottom: 20px;
+  padding: 15px 0 12px 0;
+  
+  .detail-row {
+    display: flex;
+    margin-bottom: 8px;
+    font-size: 13px;
+    
+    &.top-row {
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0;
+    }
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+    
+    .detail-group {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      
+      &:not(:last-child) {
+        margin-bottom: 8px;
+      }
+    }
+    
+    .detail-group-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      text-align: left;
+      margin-left: auto; // Push the entire container to the right
+      
+      .detail-group {
+        margin-bottom: 8px;
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+    
+    .detail-label {
+      font-weight: 700;
+      color: #000;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    
+    .detail-value {
+      color: #000;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.2px;
+    }
+  }
+}
+
+// Items Container
+.items-container {
+  margin-bottom: 15px;
+}
+
+.items-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  border: 1px solid #000;
+  
+  .table-header {
+    background-color: #d3d3d3; // Light gray background
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    color-adjust: exact;
+    
+    th {
+      padding: 10px 8px;
+      text-align: center; // Centered as in image
+      font-weight: 700;
+      color: #000;
+      border: 1px solid #000;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+      background-color: #d3d3d3 !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      color-adjust: exact;
+    }
+  }
+  
+  tbody {
+    tr {
+      &.item-row {
+        td {
+          padding: 10px 8px;
+          color: #333;
+          border-left: 1px solid #000;
+          border-right: 1px solid #000;
+          border-bottom: 1px solid #000;
+          border-top: none;
+          height: 40px; // Fixed height for consistent row size
+          vertical-align: top;
+          
+          &:first-child {
+            border-left: 1px solid #000;
+          }
+          
+          &:last-child {
+            border-right: 1px solid #000;
+          }
+        }
+        
+        &.empty-row {
+          td {
+            padding: 10px 8px;
+            height: 40px; // Same fixed height as regular rows
+            border-left: 1px solid #000;
+            border-right: 1px solid #000;
+            border-bottom: 1px solid #000;
+            border-top: none;
+            vertical-align: top;
+            
+            &:first-child {
+              border-left: 1px solid #000;
+            }
+            
+            &:last-child {
+              border-right: 1px solid #000;
+            }
+          }
+        }
+      }
+    }
+    
+    .section-header-row {
+      td {
+        border-top: 1px solid #000;
+        border-bottom: 1px solid #000;
+        padding: 6px 12px;
+        
+        &:first-child {
+          border-left: 1px solid #000;
+        }
+        
+        &:last-child {
+          border-right: 1px solid #000;
+        }
+        
+        &.section-label {
+          text-align: center;
+          font-weight: 600;
+          font-size: 11px;
+          text-transform: uppercase;
+          background-color: transparent;
+          color: #000;
+          letter-spacing: 0.5px;
+        }
+      }
+    }
+    
+    .section-total-row {
+      td {
+        border-top: 1px solid #000;
+        border-bottom: 1px solid #000;
+        padding: 10px 12px;
+        background-color: transparent;
+        
+        &:first-child {
+          border-left: 1px solid #000;
+        }
+        
+        &:last-child {
+          border-right: 1px solid #000;
+        }
+        
+        &.total-label {
+          font-weight: 700;
+          font-size: 13px;
+          text-transform: uppercase;
+          color: #333;
+        }
+        
+        &.total-value {
+          font-weight: 700;
+          font-size: 13px;
+          text-align: right;
+          color: #000;
+        }
+      }
+    }
+  }
+  
+  tfoot {
+    .grand-total-row {
+      background-color: #d3d3d3; // Light gray background
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      color-adjust: exact;
+      
+      td {
+        border-top: 1px solid #000;
+        border-bottom: 1px solid #000;
+        padding: 12px 15px;
+        border-left: 1px solid #000;
+        border-right: 1px solid #000;
+        background-color: #d3d3d3 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        color-adjust: exact;
+        
+        &:first-child {
+          border-left: none;
+        }
+        
+        &:last-child {
+          border-right: none;
+        }
+        
+        &.grand-total-label {
+          font-weight: 700;
+          font-size: 14px;
+          text-transform: uppercase;
+          color: #000;
+        }
+        
+        &.grand-total-value {
+          font-weight: 700;
+          font-size: 15px;
+          text-align: right;
+          color: #000;
+        }
+      }
+    }
+  }
+  
+  .col-qty {
+    width: 10%;
+    text-align: center;
+    font-weight: 600;
+  }
+  
+  .col-description {
+    width: 55%;
+    text-align: left;
+    font-weight: 500;
+  }
+  
+  .col-cost {
+    width: 15%;
+    text-align: right;
+  }
+  
+  .col-total {
+    width: 20%;
+    text-align: right;
+    font-weight: 600;
+  }
+}
+
+// Footer
+.receipt-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+  
+  .signature-line {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    
+    .dashed-line {
+      width: 150px;
+      height: 1px;
+      border-top: 2px dashed #999;
+      margin-bottom: 5px;
+    }
+    
+    .signature-text {
+      font-size: 11px;
+      color: #666;
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+  }
+  
+  .generated-by {
+    font-size: 10px;
+    color: #999;
+    font-style: italic;
+  }
+}
+
+// Print Styles
+@media print {
+  /* Remove all shadows, borders, and container effects */
+  * {
+    box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    text-shadow: none !important;
+    border-radius: 0 !important;
+  }
+
+  html, body {
+    background: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+
+  /* Remove container styling completely */
+  .receipt-container {
+    background: transparent !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    border: none !important;
+    outline: none !important;
+  }
+
+  /* Make receipt content completely flat on page */
+  .receipt-content {
+    background: transparent !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 15px 20px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    border: none !important;
+    outline: none !important;
+    border-radius: 0 !important;
+  }
+
+  /* Hide action buttons or non-print sections */
+  .receipt-actions,
+  .action-btn {
+    display: none !important;
+  }
+
+  /* Hide dialog container borders/shadows */
+  ::ng-deep .mat-dialog-container,
+  ::ng-deep .cdk-overlay-pane {
+    box-shadow: none !important;
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Page setup - minimal margins for tighter fit */
+  @page {
+    size: A4;
+    margin: 5mm;
+    background: white;
+  }
+}
+

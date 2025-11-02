@@ -137,6 +137,81 @@
     border-bottom: none;
   }
   
+  .dropdown-divider {
+    height: 1px;
+    background-color: #f0f0f0;
+    margin: 4px 0;
+  }
+  
+  // Maintenance Toggle in Dropdown
+  .maintenance-toggle-dropdown-item {
+    padding: 12px 16px;
+    border-bottom: 1px solid #f0f0f0;
+    
+    .maintenance-toggle-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .maintenance-toggle-label {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+    
+    .maintenance-toggle {
+      display: none;
+    }
+    
+    .toggle-slider {
+      position: relative;
+      width: 36px;
+      height: 20px;
+      background-color: #ccc;
+      border-radius: 20px;
+      transition: all 0.3s ease;
+      flex-shrink: 0;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background-color: white;
+        top: 2px;
+        left: 2px;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+    }
+    
+    .maintenance-toggle:checked + .toggle-slider {
+      background-color: #783AEE;
+    }
+    
+    .maintenance-toggle:checked + .toggle-slider::before {
+      transform: translateX(16px);
+    }
+    
+    .maintenance-toggle-text {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Poppins';
+      font-size: 14px;
+      font-weight: 500;
+      color: #333;
+      flex: 1;
+      
+      .maintenance-icon-small {
+        font-size: 16px;
+      }
+    }
+  }
+  
   .dropdown-icon {
     width: 16px;
     height: 16px;
@@ -319,7 +394,29 @@
   }
 
   .notification-list {
-    // Removed max-height and overflow to fit content
+    max-height: 400px; // Maximum height before scrolling
+    overflow-y: auto; // Enable vertical scrolling
+    overflow-x: hidden; // Prevent horizontal scrolling
+    min-height: 0;
+    
+    // Custom scrollbar styling
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: #c1c1c1;
+      border-radius: 10px;
+      
+      &:hover {
+        background: #a8a8a8;
+      }
+    }
   }
 
   .notification-item {
@@ -412,4 +509,60 @@
       font-family: 'Poppins';
       font-size: 12px;
     }
+  }
+
+  /* Schedule modal */
+  .schedule-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 998;
+  }
+
+  .schedule-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80vw;
+    max-width: 1200px;
+    max-height: 80vh;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+    z-index: 999;
+    overflow: hidden;
+  }
+
+  .schedule-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    border-bottom: 1px solid #eee;
+    background: #fafbfc;
+  }
+
+  .schedule-header .title {
+    font-weight: 600;
+    color: #4b5563;
+  }
+
+  .close-btn {
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .schedule-body {
+    padding: 12px;
+    overflow: auto;
+  }
+
+  .schedule-body img {
+    width: 100%;
+    height: auto;
+    display: block;
   }

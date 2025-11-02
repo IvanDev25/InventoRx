@@ -1,4 +1,10 @@
-<div class="container">
+<div class="container" [class.loading-mode]="isLoading">
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" *ngIf="isLoading">
+      <div class="loading-spinner"></div>
+      <p class="loading-text">Updating patient, please wait...</p>
+    </div>
+
     <div class="header">
       <div class="header-content">
         <div class="patient-icon">
@@ -8,7 +14,7 @@
         </div>
         <h1>Edit Patient</h1>
       </div>
-      <button type="button" class="close-btn" (click)="onClose()">
+      <button type="button" class="close-btn" (click)="onClose()" [disabled]="isLoading">
         <span>&times;</span>
       </button>
     </div>
@@ -25,6 +31,7 @@
             [(ngModel)]="patientData.patientName"
             name="patientName"
             class="form-input"
+            [disabled]="isLoading"
           />
         </div>
 
@@ -37,6 +44,7 @@
               [(ngModel)]="patientData.isAdmitted"
               name="isAdmitted"
               class="admission-checkbox"
+              [disabled]="isLoading"
             />
             <label for="isAdmitted" class="checkbox-label">
               <span class="checkbox-text">Patient is admitted</span>
@@ -58,7 +66,8 @@
                   [(ngModel)]="searchTerm"
                   (input)="onSearchInputChange()"
                   [matAutocomplete]="auto"
-                  name="medicineSearch">
+                  name="medicineSearch"
+                  [disabled]="isLoading">
                 <mat-icon matSuffix>search</mat-icon>
                 <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onOptionSelected($event)">
                   <mat-option 
@@ -67,7 +76,8 @@
                     [class.selected-medicine]="medicine.selected">
                     <mat-checkbox 
                       [checked]="medicine.selected"
-                      (click)="toggleMedicineSelection(medicine); $event.stopPropagation()">
+                      (click)="toggleMedicineSelection(medicine); $event.stopPropagation()"
+                      [disabled]="isLoading">
                       <div class="medicine-info">
                         <span class="medicine-name">{{ medicine.genericName }}</span>
                         <div class="medicine-details">
@@ -89,7 +99,8 @@
               <button 
                 type="button" 
                 class="remove-btn"
-                (click)="removeMedicine(medicine)">
+                (click)="removeMedicine(medicine)"
+                [disabled]="isLoading">
                 ×
               </button>
             </div>
@@ -97,13 +108,14 @@
         </div>
   
         <div class="button-container">
-          <button type="submit" class="btn btn-add">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <button type="submit" class="btn btn-add" [disabled]="isLoading">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" *ngIf="!isLoading">
               <path d="M6 1V11M1 6H11" stroke="white" stroke-width="2" stroke-linecap="round"/>
             </svg>
-            Update
+            <span *ngIf="isLoading" class="spinner"></span>
+            {{ isLoading ? 'Updating...' : 'Update' }}
           </button>
-          <button type="button" class="btn btn-cancel" (click)="onClose()">Cancel</button>
+          <button type="button" class="btn btn-cancel" (click)="onClose()" [disabled]="isLoading">Cancel</button>
         </div>
       </form>
     </div>

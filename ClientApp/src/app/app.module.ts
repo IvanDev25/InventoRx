@@ -36,6 +36,9 @@ import { PatientEditModalComponent } from './patient-edit-modal/patient-edit-mod
 import { PatientDeleteModalComponent } from './patient-delete-modal/patient-delete-modal.component';
 import { PatientDischargeModalComponent } from './patient-discharge-modal/patient-discharge-modal.component';
 import { ToastContainerComponent } from './components/toast-container/toast-container.component';
+import { ChatWidgetComponent } from './chat-widget/chat-widget.component';
+import { MaintenanceBannerComponent } from './components/maintenance-banner/maintenance-banner.component';
+import { ReceiptViewComponent } from './receipt-view/receipt-view.component';
 
 @NgModule({
   declarations: [
@@ -68,6 +71,9 @@ import { ToastContainerComponent } from './components/toast-container/toast-cont
     PatientDeleteModalComponent,
     PatientDischargeModalComponent,
     ToastContainerComponent,
+    ChatWidgetComponent,
+    MaintenanceBannerComponent,
+    ReceiptViewComponent,
   ],
   imports: [
     BrowserModule,

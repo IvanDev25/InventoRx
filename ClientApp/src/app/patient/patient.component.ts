@@ -5,11 +5,14 @@ import { PatientAddModalComponent } from '../patient-add-modal/patient-add-modal
 import { PatientEditModalComponent } from '../patient-edit-modal/patient-edit-modal.component';
 import { PatientDeleteModalComponent } from '../patient-delete-modal/patient-delete-modal.component';
 import { PatientDischargeModalComponent } from '../patient-discharge-modal/patient-discharge-modal.component';
+import { ReceiptViewService } from '../receipt-view/receipt-view.service';
 import { AccountService } from '../account/account.service';
 import { AuditService } from '../audit-log/audit-log.service';
 import { ToastService } from '../services/toast.service';
+import { MaintenanceService } from '../services/maintenance.service';
 import { take } from 'rxjs';
 import jsPDF from 'jspdf';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-patient',
@@ -19,6 +22,9 @@ import jsPDF from 'jspdf';
 export class PatientComponent implements OnInit {
 
   patients: any[] = [];
+  issuanceLoading = new Map<string, boolean>(); // Track loading state per row key
+  returnLoading = new Map<string, boolean>(); // Track loading state per row key
+  isLoading: boolean = false;
   filteredPatients: any[] = []; // Store filtered patients separately
   flattenedData: any[] = [];
   paginatedData: any[] = [];
@@ -33,6 +39,14 @@ export class PatientComponent implements OnInit {
   // Track recently modified patients with timestamps
   recentlyModifiedPatients: Map<number, number> = new Map();
 
+  // Current user
+  currentUser: any = null;
+  
+  // Maintenance reminder user ID
+  readonly MAINTENANCE_USER_ID = '46f0d282-5fe1-42cb-b6bc-99fe75696fe8';
+  
+  // Maintenance message display state
+  maintenanceMessageEnabled: boolean = false;
 
   constructor(
     private patientService: PatientService,
@@ -40,14 +54,74 @@ export class PatientComponent implements OnInit {
     private dialog: MatDialog,
     private accountService: AccountService,
     private auditService: AuditService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private maintenanceService: MaintenanceService,
+    private receiptViewService: ReceiptViewService
   ) {}
 
   ngOnInit(): void {
+    // Subscribe to user changes
+    this.accountService.user$.subscribe(user => {
+      this.currentUser = user;
+    });
+    
+    // Load maintenance message state from service
+    this.maintenanceMessageEnabled = this.maintenanceService.getMaintenanceEnabled();
+    this.maintenanceService.maintenanceEnabled$.subscribe(enabled => {
+      this.maintenanceMessageEnabled = enabled;
+    });
+    
     this.loadPatients();
   }
 
+  toggleMaintenanceMessage(): void {
+    this.maintenanceService.toggleMaintenanceMessage();
+  }
+
+  isMaintenanceUser(): boolean {
+    return this.currentUser?.id === this.MAINTENANCE_USER_ID;
+  }
+
+  showMaintenanceReminder(): void {
+    Swal.fire({
+      title: '⚠️ System Maintenance Reminder',
+      html: `
+        <div style="text-align: left; line-height: 1.8;">
+          <p style="margin-bottom: 15px; font-size: 15px;">
+            <strong>Please avoid using this system during maintenance hours.</strong>
+          </p>
+          <p style="margin-bottom: 10px;">
+            The system is currently undergoing scheduled maintenance to improve performance and add new features. 
+            We recommend limiting your use of the system during this time to prevent any data inconsistencies or unexpected behavior.
+          </p>
+          <ul style="margin: 15px 0; padding-left: 25px;">
+            <li style="margin-bottom: 8px;">Avoid making critical updates or changes</li>
+            <li style="margin-bottom: 8px;">Save your work frequently</li>
+            <li style="margin-bottom: 8px;">Report any issues immediately</li>
+            <li style="margin-bottom: 8px;">Check back later if you experience problems</li>
+          </ul>
+          <p style="margin-top: 15px; color: #666; font-size: 14px;">
+            Thank you for your understanding and patience during this maintenance period.
+          </p>
+        </div>
+      `,
+      icon: 'warning',
+      iconColor: '#FF9C11',
+      confirmButtonText: 'Understood',
+      confirmButtonColor: '#783AEE',
+      width: '600px',
+      customClass: {
+        popup: 'maintenance-popup',
+        title: 'maintenance-title',
+        htmlContainer: 'maintenance-content'
+      }
+    });
+  }
+
   loadPatients(): void {
+    this.isLoading = true;
+    this.cdr.detectChanges();
+
     this.patientService.getPatients().subscribe({
       next: (data) => {
         // Sort patients by recently modified timestamp (most recent first)
@@ -70,10 +144,13 @@ export class PatientComponent implements OnInit {
         // Update paginated data
         this.updatePaginatedData();
         
+        this.isLoading = false;
         this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error loading patients:', error);
+        this.isLoading = false;
+        this.cdr.detectChanges();
         this.toastService.showError('Failed to load patient data. Please refresh the page.');
       }
     });
@@ -212,9 +289,14 @@ export class PatientComponent implements OnInit {
       return;
     }
 
+    const rowKey = `${row.patientId}_${row.originalData.medicine.id}`;
     const patientId = row.patientId;
     const medicineId = row.originalData.medicine.id;
     const quantityChange = row.issuance;
+
+    // Set loading state
+    this.issuanceLoading.set(rowKey, true);
+    this.cdr.detectChanges();
   
     this.patientService.updatePatientMedicineQuantity(patientId, medicineId, quantityChange, 'issuance').subscribe({
       next: (response) => {
@@ -244,11 +326,18 @@ export class PatientComponent implements OnInit {
         // Mark patient as recently modified
         this.updatePatientLastModified(patientId);
         
+        // Clear loading state
+        this.issuanceLoading.set(rowKey, false);
+        
         // Reload all patient data to get updated quantities and stock
         this.loadPatients();
       },
       error: (error) => {
         console.error('Error updating patient medicine quantity:', error);
+        
+        // Clear loading state
+        this.issuanceLoading.set(rowKey, false);
+        this.cdr.detectChanges();
         
         // Show error toast notification
         this.toastService.showError(error.error?.message || 'Failed to issue medicine to patient!');
@@ -280,9 +369,14 @@ export class PatientComponent implements OnInit {
       return;
     }
 
+    const rowKey = `${row.patientId}_${row.originalData.medicine.id}`;
     const patientId = row.patientId;
     const medicineId = row.originalData.medicine.id;
     const quantityChange = row.return;
+
+    // Set loading state
+    this.returnLoading.set(rowKey, true);
+    this.cdr.detectChanges();
   
     this.patientService.updatePatientMedicineQuantity(patientId, medicineId, quantityChange, 'return').subscribe({
       next: (response) => {
@@ -313,16 +407,34 @@ export class PatientComponent implements OnInit {
         // Mark patient as recently modified
         this.updatePatientLastModified(patientId);
         
+        // Clear loading state
+        this.returnLoading.set(rowKey, false);
+        
         // Reload all patient data to get updated quantities and stock
         this.loadPatients();
       },
       error: (error) => {
         console.error('Error updating patient medicine quantity:', error);
         
+        // Clear loading state
+        this.returnLoading.set(rowKey, false);
+        this.cdr.detectChanges();
+        
         // Show error toast notification
         this.toastService.showError(error.error?.message || 'Failed to return medicine from patient!');
       }
     });
+  }
+
+  // Helper methods to check loading state
+  isIssuanceLoading(row: any): boolean {
+    const rowKey = `${row.patientId}_${row.originalData.medicine.id}`;
+    return this.issuanceLoading.get(rowKey) || false;
+  }
+
+  isReturnLoading(row: any): boolean {
+    const rowKey = `${row.patientId}_${row.originalData.medicine.id}`;
+    return this.returnLoading.get(rowKey) || false;
   }
 
   // Legacy methods (keeping for backward compatibility if needed elsewhere)
@@ -383,6 +495,18 @@ export class PatientComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
+        // Show loading overlay
+        Swal.fire({
+          title: 'Processing...',
+          html: 'Deleting patient, please wait...',
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          showConfirmButton: false,
+          didOpen: () => {
+            Swal.showLoading();
+          }
+        });
+
         this.patientService.deletePatient(row.originalData.patientId).subscribe({
           next: () => {
             // Log audit after successful patient deletion
@@ -401,11 +525,13 @@ export class PatientComponent implements OnInit {
               }
             });
 
+            Swal.close();
             this.toastService.showSuccess('Patient deleted successfully!');
             this.loadPatients(); // Refresh the table
           },
           error: (error) => {
             console.error('Error deleting patient:', error);
+            Swal.close();
             this.toastService.showError('Failed to delete patient. Please try again later.');
           }
         });
@@ -423,6 +549,18 @@ export class PatientComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
+        // Show loading overlay
+        Swal.fire({
+          title: 'Processing...',
+          html: 'Discharging patient, please wait...',
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          showConfirmButton: false,
+          didOpen: () => {
+            Swal.showLoading();
+          }
+        });
+
         this.patientService.deletePatient(row.originalData.patientId).subscribe({
           next: () => {
             // Log audit after successful patient discharge (deletion)
@@ -441,11 +579,13 @@ export class PatientComponent implements OnInit {
               }
             });
 
+            Swal.close();
             this.toastService.showSuccess('Patient discharged successfully!');
             this.loadPatients(); // Refresh the table
           },
           error: (error) => {
             console.error('Error discharging patient:', error);
+            Swal.close();
             this.toastService.showError('Failed to discharge patient. Please try again later.');
           }
         });
@@ -633,11 +773,10 @@ export class PatientComponent implements OnInit {
         
         let yPosition = 95;
         doc.text('Medicine Name', 20, yPosition);
-        doc.text('Consignor', 70, yPosition);
-        doc.text('Stock', 110, yPosition);
-        doc.text('Qty', 130, yPosition);
-        doc.text('Price', 150, yPosition);
-        doc.text('Total', 170, yPosition);
+        doc.text('ACS', 70, yPosition);
+        doc.text('Qty', 110, yPosition);
+        doc.text('Price', 130, yPosition);
+        doc.text('Total', 150, yPosition);
         
         // Add line under headers
         doc.line(20, yPosition + 5, 190, yPosition + 5);
@@ -654,10 +793,9 @@ export class PatientComponent implements OnInit {
           
           doc.text(medicine.medicineName, 20, yPosition);
           doc.text(medicine.supplierName, 70, yPosition);
-          doc.text(medicine.stock.toString(), 110, yPosition);
-          doc.text(medicine.quantity.toString(), 130, yPosition);
-          doc.text(`₱${medicine.price.toFixed(2)}`, 150, yPosition);
-          doc.text(`₱${medicine.priceTotal.toFixed(2)}`, 170, yPosition);
+          doc.text(medicine.quantity.toString(), 110, yPosition);
+          doc.text(medicine.price.toFixed(2), 130, yPosition);
+          doc.text(medicine.priceTotal.toFixed(2), 150, yPosition);
           
           yPosition += 10;
         });
@@ -669,16 +807,16 @@ export class PatientComponent implements OnInit {
         
         if (row.nonRegularConsignerTotal > 0) {
           yPosition += 10;
-          doc.text(`Consignor Total: ₱${row.nonRegularConsignerTotal.toFixed(2)}`, 30, yPosition);
+          doc.text(`Consignor Total: ${row.nonRegularConsignerTotal.toFixed(2)}`, 30, yPosition);
         }
         
         if (row.regularConsignerTotal > 0) {
           yPosition += 10;
-          doc.text(`REGULAR Total: ₱${row.regularConsignerTotal.toFixed(2)}`, 30, yPosition);
+          doc.text(`REGULAR Total: ${row.regularConsignerTotal.toFixed(2)}`, 30, yPosition);
         }
         
         yPosition += 10;
-        doc.text(`Grand Total: ₱${row.patientTotal.toFixed(2)}`, 30, yPosition);
+        doc.text(`Grand Total: ${row.patientTotal.toFixed(2)}`, 30, yPosition);
       } else {
         doc.setFontSize(12);
         doc.text('No medicines assigned to this patient.', 20, 95);
@@ -715,6 +853,22 @@ export class PatientComponent implements OnInit {
     } catch (error) {
       console.error('Error generating PDF:', error);
       this.toastService.showError('Failed to generate PDF report. Please try again.');
+    }
+  }
+
+  viewReceipt(row: any): void {
+    try {
+      // Get all medicines for this patient
+      const patientMedicines = this.flattenedData.filter(item => item.patientId === row.patientId);
+      
+      // Show receipt using service
+      this.receiptViewService.showReceipt({
+        patient: row,
+        medicines: patientMedicines
+      });
+    } catch (error) {
+      console.error('Error opening receipt:', error);
+      this.toastService.showError('Failed to open receipt. Please try again.');
     }
   }
 

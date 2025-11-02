@@ -16,6 +16,7 @@ export class PatientAddModalComponent {
   filteredMedicines: any[] = [];
   selectedMedicines: any[] = [];
   searchTerm: string = '';
+  isLoading: boolean = false;
 
   // ✅ Model for form data (allowing null for safety)
   patientData = {
@@ -132,6 +133,9 @@ export class PatientAddModalComponent {
       return;
     }
 
+    // Start loading
+    this.isLoading = true;
+
     // Step 1: Create the patient
     const patientData = {
       patientName: this.patientData.patientName,
@@ -162,6 +166,7 @@ export class PatientAddModalComponent {
       },
       error: (error) => {
         console.error('Error creating patient:', error);
+        this.isLoading = false;
         Swal.fire('Error', 'Failed to add patient.', 'error');
       }
     });
@@ -184,15 +189,18 @@ export class PatientAddModalComponent {
             this.assignMedicinesToPatient(latestPatient.id);
           } else {
             console.error('Could not find patient with name:', this.patientData.patientName);
+            this.isLoading = false;
             Swal.fire('Error', 'Patient created but could not find patient ID. Please try again.', 'error');
           }
         } else {
           console.error('No patients found');
+          this.isLoading = false;
           Swal.fire('Error', 'Patient created but could not retrieve patient list. Please try again.', 'error');
         }
       },
       error: (error) => {
         console.error('Error getting patients:', error);
+        this.isLoading = false;
         Swal.fire('Error', 'Patient created but could not retrieve patient list. Please try again.', 'error');
       }
     });
@@ -221,11 +229,13 @@ export class PatientAddModalComponent {
           }
         });
         
+        this.isLoading = false;
         Swal.fire('Success', 'Patient and medicines added successfully!', 'success');
         this.dialogRef.close(true);
       },
       error: (error) => {
         console.error('Error assigning medicines:', error);
+        this.isLoading = false;
         Swal.fire('Error', 'Failed to assign medicines to patient.', 'error');
       }
     });

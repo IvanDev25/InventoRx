@@ -23,6 +23,9 @@ export class DashboardComponent implements OnInit {
   }
 
   loadMedicineSuppliers(): void {
+    this.loading = true;
+    this.cdr.detectChanges();
+
     this.dashboardService.getMedicineSuppliers().subscribe({
       next: (suppliers) => {
         this.medicineSuppliers = suppliers;
@@ -97,9 +100,9 @@ export class DashboardComponent implements OnInit {
 
   private isExpiringSoon(expirationDate: string): boolean {
     const expDate = new Date(expirationDate);
-    const oneMonthFromNow = new Date();
-    oneMonthFromNow.setMonth(oneMonthFromNow.getMonth() + 1);
-    return expDate <= oneMonthFromNow;
+    const threeMonthsFromNow = new Date();
+    threeMonthsFromNow.setMonth(threeMonthsFromNow.getMonth() + 3);
+    return expDate <= threeMonthsFromNow;
   }
 
   formatDate(dateString: string): string {

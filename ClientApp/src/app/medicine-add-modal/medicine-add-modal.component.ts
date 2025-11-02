@@ -15,6 +15,7 @@ import { AuditService } from '../audit-log/audit-log.service';
 export class MedicineAddModalComponent {
   suppliers: any[] = [];
   selectedSupplierId: number | null = null;
+  isLoading: boolean = false;
 
   // ✅ Model for form data (allowing null for safety)
   medicineData = {
@@ -79,6 +80,9 @@ export class MedicineAddModalComponent {
       return;
     }
 
+    // Start loading - show loading state
+    this.isLoading = true;
+
     // Ensure supplierId is valid
     this.medicineData.medicineSupplierId = this.selectedSupplierId ?? 0;
 
@@ -100,11 +104,13 @@ export class MedicineAddModalComponent {
           }
         });
 
+        this.isLoading = false;
         Swal.fire('Success', 'Medicine added successfully!', 'success');
         this.dialogRef.close(true);
       },
       error: (error) => {
         console.error('Error adding medicine:', error);
+        this.isLoading = false;
         Swal.fire('Error', 'Failed to add medicine.', 'error');
       }
     });

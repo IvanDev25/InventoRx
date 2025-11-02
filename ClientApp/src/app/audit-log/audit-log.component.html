@@ -16,7 +16,13 @@
           </div>
         </div>
   
-  <div class="body-content">
+  <div class="body-content" [class.loading-mode]="isLoading">
+    <!-- Loading Overlay -->
+    <div class="table-loading-overlay" *ngIf="isLoading">
+      <div class="table-loading-spinner"></div>
+      <p class="table-loading-text">Loading audit logs...</p>
+    </div>
+
     <table mat-table [dataSource]="paginatedData" matSort class="custom-table">
 
       <!-- Name -->
