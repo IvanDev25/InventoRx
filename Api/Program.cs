@@ -81,6 +81,7 @@ builder.Services.AddScoped<ICustomPatientServiceAsync, CustomPatientServiceAsync
 builder.Services.AddScoped<ICustomMedicineSupplierServiceAsync, CustomMedicineSupplierServiceAsync>();
 builder.Services.AddScoped<ICustomMedicineServiceAsync, CustomMedicineServiceAsync>();
 builder.Services.AddScoped<ICustomAuditServiceAsync, CustomAuditServiceAsync>();
+builder.Services.AddScoped<ICustomMaintenanceSettingsAsync, CustomMaintenanceSettingsAsync>();
 builder.Services.AddScoped<IDapperServiceAsync, DapperServiceAsync>();
 
 //defining our IdentityCore Service

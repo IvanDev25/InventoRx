@@ -18,7 +18,7 @@
   visibility: hidden;
   transition: opacity 0.3s ease, visibility 0.3s ease;
   overflow-y: auto;
-  padding: 20px;
+  padding: 15px;
   pointer-events: none;
 
   &.active {
@@ -41,6 +41,7 @@
   border-radius: 8px;
   overflow-y: auto;
   overflow-x: hidden;
+  padding: 10px;
   
   /* Custom scrollbar styling */
   &::-webkit-scrollbar {
@@ -110,7 +111,7 @@
 }
 
 .receipt-content {
-  padding: 30px 40px;
+  padding: 15px 20px;
   max-width: 800px;
   margin: 0 auto;
   background: transparent;
@@ -118,7 +119,7 @@
   min-height: 600px; // Fixed minimum height for consistent receipt size
   
   @media print {
-    padding: 0 !important;
+    padding: 15px 20px !important;
     max-width: 100% !important;
     width: 100% !important;
     margin: 0 !important;
@@ -207,7 +208,7 @@
     margin-top: 15px;
     
     h2 {
-      font-size: 16px;
+      font-size: 25px;
       font-weight: 700;
       color: #000;
       margin: 0;
@@ -225,7 +226,7 @@
   .detail-row {
     display: flex;
     margin-bottom: 8px;
-    font-size: 13px;
+    font-size: 20px;
     
     &.top-row {
       justify-content: space-between;
@@ -290,8 +291,9 @@
 .items-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 12px;
+  font-size: 14px;
   border: 1px solid #000;
+  table-layout: fixed; // Fixed table layout for consistent sizing
   
   .table-header {
     background-color: #d3d3d3; // Light gray background
@@ -300,33 +302,50 @@
     color-adjust: exact;
     
     th {
-      padding: 10px 8px;
+      padding: 0;
       text-align: center; // Centered as in image
       font-weight: 700;
       color: #000;
-      border: 1px solid #000;
+      border-top: 1px solid #000;
+      border-bottom: 1px solid #000;
+      border-left: 1px solid #000; // Vertical borders between columns
+      border-right: 1px solid #000; // Vertical borders between columns
       text-transform: uppercase;
-      font-size: 11px;
+      font-size: 14px;
       letter-spacing: 0.5px;
       background-color: #d3d3d3 !important;
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
       color-adjust: exact;
+      
+      &:first-child {
+        border-left: 1px solid #000;
+      }
+      
+      &:last-child {
+        border-right: 1px solid #000;
+      }
     }
   }
   
   tbody {
     tr {
       &.item-row {
+        display: table-row; // Ensure row is displayed
+        
         td {
-          padding: 10px 8px;
+          padding: 0;
           color: #333;
-          border-left: 1px solid #000;
-          border-right: 1px solid #000;
-          border-bottom: 1px solid #000;
+          border-left: 1px solid #000; // Vertical borders between columns
+          border-right: 1px solid #000; // Vertical borders between columns
+          border-bottom: none; // No horizontal borders between rows
           border-top: none;
-          height: 40px; // Fixed height for consistent row size
-          vertical-align: top;
+          vertical-align: middle;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          display: table-cell; // Ensure cell is displayed
+          min-height: 20px; // Minimum height to maintain alignment
           
           &:first-child {
             border-left: 1px solid #000;
@@ -338,14 +357,17 @@
         }
         
         &.empty-row {
+          display: table-row; // Ensure row is displayed
+          
           td {
-            padding: 10px 8px;
-            height: 40px; // Same fixed height as regular rows
-            border-left: 1px solid #000;
-            border-right: 1px solid #000;
-            border-bottom: 1px solid #000;
+            padding: 0;
+            min-height: 20px; // Minimum height to make empty rows visible
+            border-left: 1px solid #000; // Vertical borders
+            border-right: 1px solid #000; // Vertical borders
+            border-bottom: none; // No horizontal border for empty rows
             border-top: none;
-            vertical-align: top;
+            vertical-align: middle;
+            display: table-cell; // Ensure cell is displayed
             
             &:first-child {
               border-left: 1px solid #000;
@@ -361,9 +383,11 @@
     
     .section-header-row {
       td {
-        border-top: 1px solid #000;
-        border-bottom: 1px solid #000;
-        padding: 6px 12px;
+        border-top: 1px solid #000; // Horizontal border top
+        border-bottom: 1px solid #000; // Horizontal border bottom
+        padding: 0;
+        border-left: 1px solid #000; // Vertical borders between columns
+        border-right: 1px solid #000; // Vertical borders between columns
         
         &:first-child {
           border-left: 1px solid #000;
@@ -376,7 +400,7 @@
         &.section-label {
           text-align: center;
           font-weight: 600;
-          font-size: 11px;
+          font-size: 14px;
           text-transform: uppercase;
           background-color: transparent;
           color: #000;
@@ -387,10 +411,12 @@
     
     .section-total-row {
       td {
-        border-top: 1px solid #000;
-        border-bottom: 1px solid #000;
-        padding: 10px 12px;
+        border-top: 1px solid #000; // Horizontal border top
+        border-bottom: 1px solid #000; // Horizontal border bottom
+        padding: 8px 10px;
         background-color: transparent;
+        border-left: 1px solid #000; // Vertical borders between columns
+        border-right: 1px solid #000; // Vertical borders between columns
         
         &:first-child {
           border-left: 1px solid #000;
@@ -402,14 +428,14 @@
         
         &.total-label {
           font-weight: 700;
-          font-size: 13px;
+          font-size: 25px;
           text-transform: uppercase;
           color: #333;
         }
         
         &.total-value {
           font-weight: 700;
-          font-size: 13px;
+          font-size: 25px;
           text-align: right;
           color: #000;
         }
@@ -427,7 +453,7 @@
       td {
         border-top: 1px solid #000;
         border-bottom: 1px solid #000;
-        padding: 12px 15px;
+        padding: 8px 10px;
         border-left: 1px solid #000;
         border-right: 1px solid #000;
         background-color: #d3d3d3 !important;
@@ -436,23 +462,23 @@
         color-adjust: exact;
         
         &:first-child {
-          border-left: none;
+          border-left: 1px solid #000;
         }
         
         &:last-child {
-          border-right: none;
+          border-right: 1px solid #000;
         }
         
         &.grand-total-label {
           font-weight: 700;
-          font-size: 14px;
+          font-size: 25px;
           text-transform: uppercase;
           color: #000;
         }
         
         &.grand-total-value {
           font-weight: 700;
-          font-size: 15px;
+          font-size: 25px;
           text-align: right;
           color: #000;
         }
@@ -464,23 +490,28 @@
     width: 10%;
     text-align: center;
     font-weight: 600;
+    font-size: 20px;
   }
   
   .col-description {
     width: 55%;
     text-align: left;
-    font-weight: 500;
+    font-weight: 700; // Bold for medicine names
+    font-size: 20px;
   }
   
   .col-cost {
     width: 15%;
     text-align: right;
+    font-weight: 700; // Bold for cost
+    font-size: 20px;
   }
   
   .col-total {
     width: 20%;
     text-align: right;
-    font-weight: 600;
+    font-weight: 700; // Bold for total
+    font-size: 20px;
   }
 }
 

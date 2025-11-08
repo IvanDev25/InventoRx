@@ -863,8 +863,8 @@ export class PatientComponent implements OnInit {
       
       // Show receipt using service
       this.receiptViewService.showReceipt({
-        patient: row,
-        medicines: patientMedicines
+          patient: row,
+          medicines: patientMedicines
       });
     } catch (error) {
       console.error('Error opening receipt:', error);

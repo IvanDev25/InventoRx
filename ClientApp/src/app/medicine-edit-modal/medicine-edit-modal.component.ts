@@ -119,14 +119,14 @@ export class MedicineEditModalComponent implements OnInit {
     // Ensure supplierId is valid
     this.medicineData.medicineSupplierId = this.selectedSupplierId ?? 0;
 
-    // Create update data without stock field (keep stock as is)
+    // Create update data with stock field
     const updateData = {
       id: this.medicineData.id,
       genericName: this.medicineData.genericName,
       price: this.medicineData.price,
+      stock: this.medicineData.stock,
       expirationDate: this.medicineData.expirationDate,
       medicineSupplierId: this.medicineData.medicineSupplierId
-      // Note: stock is intentionally excluded to keep existing value
     };
 
     this.medicineAddService.updateMedicine(updateData).subscribe({
@@ -158,6 +158,10 @@ export class MedicineEditModalComponent implements OnInit {
         
         if (this.originalData.price !== this.medicineData.price) {
           changes.push(`price from ${this.originalData.price} to ${this.medicineData.price}`);
+        }
+        
+        if (this.originalData.stock !== this.medicineData.stock) {
+          changes.push(`stock from ${this.originalData.stock} to ${this.medicineData.stock}`);
         }
         
         if (this.formatDateForInput(this.originalData.expirationDate) !== this.medicineData.expirationDate) {

@@ -50,6 +50,21 @@
           />
         </div>
   
+        <!-- Stock -->
+        <div class="form-group">
+          <label for="stock">Stock</label>
+          <input
+            type="number"
+            id="stock"
+            placeholder="Input stock"
+            [(ngModel)]="medicineData.stock"
+            name="stock"
+            [disabled]="isLoading"
+            required
+            min="0"
+          />
+        </div>
+  
         <!-- Expiration Date -->
         <div class="form-group">
           <label for="expirationDate">Expiration Date</label>

@@ -30,8 +30,8 @@ export class ReceiptViewComponent implements OnInit, OnDestroy {
     // Subscribe to data changes
     const dataSub = this.receiptViewService.getReceiptData().subscribe(data => {
       if (data) {
-        this.patientData = data.patient;
-        this.patientMedicines = data.medicines || [];
+    this.patientData = data.patient;
+    this.patientMedicines = data.medicines || [];
         this.processData();
       }
     });
@@ -86,7 +86,7 @@ export class ReceiptViewComponent implements OnInit, OnDestroy {
 
   getStatusText(): string {
     if (this.patientData?.isAdmitted) {
-      return 'OPD / ADMITTED';
+      return 'ADMITTED';
     }
     return 'OPD';
   }

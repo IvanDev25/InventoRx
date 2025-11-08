@@ -1,6 +1,6 @@
 <div class="receipt-modal-overlay" [class.active]="isVisible" (click)="onBackdropClick($event)">
   <div class="receipt-modal-container" (click)="$event.stopPropagation()">
-    <div class="receipt-container">
+<div class="receipt-container">
   <div class="receipt-actions">
     <button class="action-btn print-btn" (click)="onPrint()" title="Print Receipt">
       🖨️ Print
@@ -37,17 +37,17 @@
     <div class="patient-details">
       <div class="detail-row top-row">
         <div class="detail-group">
-          <span class="detail-label">NAME:</span>
-          <span class="detail-value">{{ patientData?.patientName || 'N/A' }}</span>
-        </div>
+        <span class="detail-label">NAME:</span>
+        <span class="detail-value">{{ patientData?.patientName || 'N/A' }}</span>
+      </div>
         <div class="detail-group-right">
           <div class="detail-group">
-            <span class="detail-label">DATE:</span>
-            <span class="detail-value">{{ currentDate }}</span>
-          </div>
+        <span class="detail-label">DATE:</span>
+        <span class="detail-value">{{ currentDate }}</span>
+      </div>
           <div class="detail-group">
-            <span class="detail-label">STATUS:</span>
-            <span class="detail-value">{{ getStatusText() }}</span>
+        <span class="detail-label">STATUS:</span>
+        <span class="detail-value">{{ getStatusText() }}</span>
           </div>
         </div>
       </div>
@@ -64,24 +64,24 @@
             <th class="col-total">Total</th>
           </tr>
         </thead>
-        <tbody>
+          <tbody>
           <!-- ACS Section - Always Displayed -->
           <tr class="section-header-row">
             <td class="col-qty"></td>
             <td class="section-label" colspan="3">ACS</td>
           </tr>
           <tr *ngFor="let medicine of acsMedicines" class="item-row">
-            <td class="col-qty">{{ medicine.quantity || 0 }}</td>
-            <td class="col-description">{{ medicine.medicineName || 'N/A' }}</td>
-            <td class="col-cost">{{ formatPrice(medicine.price || 0) }}</td>
-            <td class="col-total">{{ formatPrice(medicine.priceTotal || 0) }}</td>
-          </tr>
-          <!-- Empty rows if no medicines to maintain fixed size -->
-          <tr *ngFor="let i of getEmptyRows(acsMedicines.length, 5)" class="item-row empty-row">
-            <td class="col-qty"></td>
-            <td class="col-description"></td>
-            <td class="col-cost"></td>
-            <td class="col-total"></td>
+              <td class="col-qty">{{ medicine.quantity || 0 }}</td>
+              <td class="col-description">{{ medicine.medicineName || 'N/A' }}</td>
+              <td class="col-cost">{{ formatPrice(medicine.price || 0) }}</td>
+              <td class="col-total">{{ formatPrice(medicine.priceTotal || 0) }}</td>
+            </tr>
+                  <!-- Empty rows if no medicines to maintain fixed size -->
+                  <tr *ngFor="let i of getEmptyRows(acsMedicines.length, 29)" class="item-row empty-row">
+            <td class="col-qty">&nbsp;</td>
+            <td class="col-description">&nbsp;</td>
+            <td class="col-cost">&nbsp;</td>
+            <td class="col-total">&nbsp;</td>
           </tr>
           <tr class="section-total-row">
             <td class="col-qty"></td>
@@ -96,17 +96,17 @@
             <td class="section-label" colspan="3">REGULAR</td>
           </tr>
           <tr *ngFor="let medicine of regularMedicines" class="item-row">
-            <td class="col-qty">{{ medicine.quantity || 0 }}</td>
-            <td class="col-description">{{ medicine.medicineName || 'N/A' }}</td>
-            <td class="col-cost">{{ formatPrice(medicine.price || 0) }}</td>
-            <td class="col-total">{{ formatPrice(medicine.priceTotal || 0) }}</td>
-          </tr>
+              <td class="col-qty">{{ medicine.quantity || 0 }}</td>
+              <td class="col-description">{{ medicine.medicineName || 'N/A' }}</td>
+              <td class="col-cost">{{ formatPrice(medicine.price || 0) }}</td>
+              <td class="col-total">{{ formatPrice(medicine.priceTotal || 0) }}</td>
+            </tr>
           <!-- Empty rows if no medicines to maintain fixed size -->
-          <tr *ngFor="let i of getEmptyRows(regularMedicines.length, 5)" class="item-row empty-row">
-            <td class="col-qty"></td>
-            <td class="col-description"></td>
-            <td class="col-cost"></td>
-            <td class="col-total"></td>
+          <tr *ngFor="let i of getEmptyRows(regularMedicines.length, 6)" class="item-row empty-row">
+            <td class="col-qty">&nbsp;</td>
+            <td class="col-description">&nbsp;</td>
+            <td class="col-cost">&nbsp;</td>
+            <td class="col-total">&nbsp;</td>
           </tr>
           <tr class="section-total-row">
             <td class="col-qty"></td>
@@ -114,7 +114,7 @@
             <td class="col-cost"></td>
             <td class="col-total total-value">{{ formatPrice(patientData?.regularConsignerTotal || 0) }}</td>
           </tr>
-        </tbody>
+          </tbody>
         <tfoot>
           <tr class="grand-total-row">
             <td class="col-qty"></td>
@@ -123,7 +123,7 @@
             <td class="col-total grand-total-value">{{ formatPrice(patientData?.patientTotal || 0) }}</td>
           </tr>
         </tfoot>
-      </table>
+        </table>
     </div>
 
     <!-- Footer -->
@@ -137,7 +137,7 @@
       </div>
     </div>
   </div>
-  </div>
+</div>
 </div>
 
 

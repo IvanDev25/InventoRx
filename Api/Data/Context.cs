@@ -28,6 +28,7 @@ namespace Api.Data
         public DbSet<MedicineSupplier> MedicineSuppliers { get; set; }
         public DbSet<Audit> Audits { get; set; }
         public DbSet<PatientMedicine> PatientMedicines { get; set; }
+        public DbSet<MaintenanceSettings> MaintenanceSettings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

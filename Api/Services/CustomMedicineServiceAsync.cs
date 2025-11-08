@@ -205,13 +205,24 @@ namespace Api.Services
 
             try
             {
-                // First, get the current medicine to calculate new stock
+                // First, get the current medicine
                 var current = await GetMedicineById(medicineDto.Id);
                 if (current == null)
                     return new Response("Medicine not found.");
 
-                // Calculate new stock: current stock - issuance + return
-                int newStock = current.Stock - medicineDto.Issuance + medicineDto.Return;
+                // Use stock directly from DTO (when stock is provided in edit form)
+                // Otherwise, calculate from issuance/return for backward compatibility
+                int newStock;
+                if (medicineDto.Issuance == 0 && medicineDto.Return == 0)
+                {
+                    // Stock is being edited directly, use the value from DTO
+                    newStock = medicineDto.Stock;
+                }
+                else
+                {
+                    // Calculate new stock: current stock - issuance + return (for backward compatibility)
+                    newStock = current.Stock - medicineDto.Issuance + medicineDto.Return;
+                }
 
                 string query = @"
                     UPDATE Medicines 
